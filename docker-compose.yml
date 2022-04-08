@@ -1,0 +1,11 @@
+version: "3.9"
+services:
+  webcontainer:
+    build: .
+    image: vooplv/webcontainer
+    tmpfs:
+      - /tmp
+    ports:
+      - "80"
+      - "443"  
+    restart: unless-stopped  
