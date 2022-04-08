@@ -6,12 +6,12 @@ checkDir() {
 certStuffRoot="/web/cert_webroot"
 sslDirPath="/web/ssl"
 
-if ! check_dir $certStuffRoot; then
+if ! checkDir $certStuffRoot; then
     echo "Creating cert_webroot folder"
     mkdir -p $certStuffRoot
 fi
 
-if ! check_dir $sslDirPath; then
+if ! checkDir $sslDirPath; then
     echo "Creating ssl folder"
     mkdir -p $sslDirPath
 fi
