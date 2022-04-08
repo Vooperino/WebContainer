@@ -3,9 +3,15 @@ services:
   webcontainer:
     build: .
     image: vooplv/webcontainer
+    tty: true
+    stdin_open: true
     tmpfs:
       - /tmp
     ports:
       - "80"
-      - "443"  
-    restart: unless-stopped  
+      - "443"
+    volumes:
+      - "./web:/web"    
+      - "./config:/config"
+      - "./scripts:/scripts"
+    restart: unless-stopped
