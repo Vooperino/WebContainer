@@ -1,5 +1,6 @@
 FROM debian:bullseye-slim
 ENV DEBIAN_FRONTEND noninteractive
+MAINTAINER voop@voop.lv
 
 EXPOSE 80
 EXPOSE 443
