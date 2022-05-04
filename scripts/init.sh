@@ -34,5 +34,7 @@ service php7.4-fpm start
 service php8.0-fpm start
 service cron start
 
+crontab config/cron
+
 bash $AUTORUN_PATH
 bash
