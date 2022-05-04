@@ -1,8 +1,5 @@
 #!/usr/bin/env bash
 
-cron_root="/etc/cron.d"
-cron_custom="/config/cron"
-
 nginx_root="/etc/nginx"
 nginx_custom="/config/nginx"
 
@@ -22,11 +19,6 @@ bash /scripts/pathChecker.sh
 
 apt-get update
 apt-get full-upgrade -y
-
-#Copy Systemctl Replacer
-
-#Copy Cron Stuff
-cp -r -f $cron_custom/* $cron_root
 
 #Copy Nginx Stuff
 cp -r -f $nginx_custom/* $nginx_root
