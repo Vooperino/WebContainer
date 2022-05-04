@@ -6,6 +6,8 @@ cron_custom="/config/cron"
 nginx_root="/etc/nginx"
 nginx_custom="/config/nginx"
 
+crontab_file="/config/cronTasks"
+
 AUTORUN_PATH="/web/config/autorun.sh"
 
 checkDir() {
@@ -34,7 +36,9 @@ service php7.4-fpm start
 service php8.0-fpm start
 service cron start
 
-crontab config/cron
+if checkFile $crontab_file; then
+    crontab /config/cronTasks
+fi
 
 bash $AUTORUN_PATH
 bash
