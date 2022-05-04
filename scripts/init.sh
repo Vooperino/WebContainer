@@ -34,6 +34,7 @@ cp -r -f $nginx_custom/* $nginx_root
 service nginx start
 service php7.4-fpm start
 service php8.0-fpm start
+service php8.1-fpm start
 service cron start
 
 if checkFile $crontab_file; then
