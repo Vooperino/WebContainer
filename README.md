@@ -8,7 +8,7 @@ Currently includes
 * Cron
 * Python 3 and 2
 * PHP Composer
-* Systemd replacer (Python)
+* Systemd replacer (Python) - *Incase if you want to use Pterodactyl, you will need to use it for the service*
 * Certbot or LetsEncrypt
 
 `Work in progress`
