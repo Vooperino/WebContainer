@@ -29,6 +29,8 @@ if checkDir "/clean"; then
     if isEmptyDir $CLEAN_PATH; then
         output "Clean configuration was not found! Corrupt of incomplete docker build of this container! Exiting"
         exit 1
+    else
+        output "Clean configuration folder was found!"    
     fi
 else
     output "Clean configuration was not found! Corrupt of incomplete docker build of this container! Exiting"
