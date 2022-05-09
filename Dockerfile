@@ -15,4 +15,4 @@ RUN bash /install/install.sh
 RUN bash /install/cleanConfig.sh
 RUN cp -r -f /scripts/systemd-replacer/systemctl3.py /usr/bin/systemctl
 
-CMD bash init.sh
+CMD bash /init.sh
