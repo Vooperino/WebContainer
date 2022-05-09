@@ -30,7 +30,7 @@ if checkDir "/clean"; then
         output "Clean configuration was not found! Corrupt of incomplete docker build of this container! Exiting"
         exit 1
     fi
-else;
+else
     output "Clean configuration was not found! Corrupt of incomplete docker build of this container! Exiting"
     exit 1
 fi
