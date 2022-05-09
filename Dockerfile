@@ -9,7 +9,10 @@ COPY scripts scripts
 COPY install install
 COPY config config
 
+COPY init.sh init.sh
+
 RUN bash /install/install.sh
+RUN bash /install/cleanConfig.sh
 RUN cp -r -f /scripts/systemd-replacer/systemctl3.py /usr/bin/systemctl
 
-CMD bash /scripts/init.sh
+CMD bash init.sh
