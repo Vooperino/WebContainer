@@ -47,7 +47,7 @@ if isEmptyDir "/config"; then
     cp -r -f -v $CLEAN_PATH/config/* /config
 fi
 
-if isEmptyDir "/script"; then 
+if isEmptyDir "/scripts"; then 
     output "Copying clean script data"
     cp -r -f -v $CLEAN_PATH/scripts/* /scripts
 fi
