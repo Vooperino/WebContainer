@@ -70,5 +70,11 @@ if checkFile $crontab_file; then
     crontab /config/cronTasks
 fi
 
+if ! checkFile $AUTORUN_PATH; then 
+    output "Creating Autorun Script File!"
+    touch $AUTORUN_PATH
+    echo "#!/usr/bin/env bash" >> $AUTORUN_PATH
+fi
+
 bash $AUTORUN_PATH
 bash
