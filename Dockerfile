@@ -13,6 +13,7 @@ COPY init.sh init.sh
 
 RUN bash /install/install.sh
 RUN bash /install/cleanConfig.sh
+RUN rm -rf /install
 RUN cp -r -f /scripts/systemd-replacer/systemctl3.py /usr/bin/systemctl
 
 CMD bash /init.sh
