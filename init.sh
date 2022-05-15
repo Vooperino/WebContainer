@@ -76,5 +76,7 @@ if ! checkFile $AUTORUN_PATH; then
     echo "#!/usr/bin/env bash" >> $AUTORUN_PATH
 fi
 
+chmod 755 -R /scripts/*
+
 bash $AUTORUN_PATH
 bash
