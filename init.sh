@@ -67,7 +67,7 @@ service php8.1-fpm start
 service cron start
 
 if checkFile $crontab_file; then
-    crontab /config/cronTasks
+    crontab -u root $crontab_file
 fi
 
 if ! checkFile $AUTORUN_PATH; then 
