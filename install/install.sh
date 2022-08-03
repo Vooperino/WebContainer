@@ -3,7 +3,7 @@
 apt-get update
 apt-get full-upgrade -y
 
-apt-get install -y curl wget gnupg nano vim emacs nginx apt-utils iftop wget git zip tar unzip socat bash-completion certbot cron inetutils-ping software-properties-common ca-certificates lsb-release apt-transport-https python3 python2
+apt-get install -y curl wget gnupg nano vim emacs nginx apt-utils iftop wget git zip tar unzip bmon socat bash-completion certbot cron inetutils-ping software-properties-common ca-certificates lsb-release apt-transport-https python3 python2
 
 sh -c 'echo "deb https://packages.sury.org/php/ $(lsb_release -sc) main" > /etc/apt/sources.list.d/php.list' 
 wget -qO - https://packages.sury.org/php/apt.gpg | apt-key add - 
