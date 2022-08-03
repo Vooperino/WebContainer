@@ -1,0 +1,1 @@
+A basic default page to see if the docker containter works or not.

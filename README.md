@@ -20,7 +20,7 @@ docker run -d -it -p 80:80 -p 443:443 -v ./web/web:/web -v ./web/config:/config 
 
 docker-compose example:
 ```yml
-version: "3.3"
+version: "3.9"
 services:
   webcontainer:
     image: vooplv/webcontainer-nginx
