@@ -6,6 +6,7 @@ nginx_custom="/config/nginx"
 crontab_file="/config/cronTasks"
 
 AUTORUN_PATH="/web/config/autorun.sh"
+WEBLAUNCH_SCRIPT="/launchWeb.sh"
 
 CLEAN_PATH="/clean"
 
@@ -58,8 +59,8 @@ apt-get update
 apt-get full-upgrade -y
 
 #Copy Nginx Stuff
-cp -r -f $nginx_custom/* $nginx_root
 
+cp -r -f $nginx_custom/* $nginx_root
 service nginx start
 service php7.4-fpm start
 service php8.0-fpm start

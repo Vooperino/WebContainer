@@ -1,8 +1,7 @@
 version: "3.9"
 services:
   webcontainer:
-    build: .
-    image: vooperino/webcontainer
+    image: vooperino/webcontainer:tag
     tty: true
     stdin_open: true
     tmpfs:
