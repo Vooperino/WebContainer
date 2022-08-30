@@ -9,6 +9,7 @@ COPY config /temp_config
 COPY scripts /temp_scripts
 COPY /init.sh /init.sh
 COPY /install.sh /install.sh
+COPY /openresty.service /openresty.service
 
 RUN apt-get install nginx -y
 RUN bash /install.sh

@@ -15,6 +15,10 @@ echo "Updating Config Dir"
 cp -r -f -v /temp_config/* /config/
 cp -r -f -v /temp_scripts/* /scripts
 
+echo "Updating Service"
+cp -r -f -v /openresty.service /clean
+cp -r -f -v /openresty.service /usr/lib/systemd/system/
+
 cp -r -f -v /scripts/reloadWebSrv.sh /usr/bin/reloadWebSrv
 chmod 555 -R /usr/bin/reloadWebSrv
 

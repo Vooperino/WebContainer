@@ -40,6 +40,8 @@ else
     exit 1
 fi
 
+cp -r -f -v /clean/openresty.service /usr/lib/systemd/system/
+
 if checkDir "/install"; then 
     output "Found install dir, removing it"
     rm -rf /install;
