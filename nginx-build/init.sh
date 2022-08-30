@@ -10,6 +10,8 @@ WEBLAUNCH_SCRIPT="/launchWeb.sh"
 
 CLEAN_PATH="/clean"
 
+NEWINSTALL="/newinstall"
+
 output() {
     echo "Output: $@"
 }
@@ -45,7 +47,12 @@ fi
 
 if isEmptyDir "/config"; then 
     output "Copying clean config data"
-    cp -r -f -v $CLEAN_PATH/config/* /config
+    cp -r -f -v $CLEAN_PATH/config/* /config    
+fi
+
+if ! checkDir "/config/nginx"; then
+    output "Failed to validate nginx config directory. Copying defaults"
+    cp -r -f -v $CLEAN_PATH/config/nginx/ /config
 fi
 
 if isEmptyDir "/scripts"; then 
@@ -69,6 +76,12 @@ service cron start
 
 if checkFile $crontab_file; then
     crontab -u root $crontab_file
+fi
+
+if ! checkFile $NEWINSTALL; then
+    echo "New install detected! Tossing a fresh default nginx config!"
+    #cp -r -f -v /clean/config/defaults/default.conf /web/config/nginx/sites-enabled/
+    rm -rf $NEWINSTALL
 fi
 
 if ! checkFile $AUTORUN_PATH; then 
