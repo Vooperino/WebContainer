@@ -1,3 +1,7 @@
+# Warning
+
+This branch is unstable to use for prod! This is a work in progress build its not ready what so ever.
+
 # WebContainer
 Basic custom made docker web container
 
@@ -15,7 +19,7 @@ When using this docker container its best to use docker-compose
 
 docker command example:
 ```bash
-docker run -d -it -p 80:80 -p 443:443 -v ./web/web:/web -v ./web/config:/config -v ./web/scripts:/scripts --restart unless-stopped --mount type=tmpfs,destination=/tmp vooplv/webcontainer-nginx
+docker run -d -it -p 80:80 -p 443:443 -v ./web/web:/web -v ./web/config:/config -v ./web/scripts:/scripts --restart unless-stopped --mount type=tmpfs,destination=/tmp vooplv/webcontainer:tag
 ```
 
 docker-compose example:
@@ -23,7 +27,7 @@ docker-compose example:
 version: "3.9"
 services:
   webcontainer:
-    image: vooplv/webcontainer-nginx
+    image: vooplv/webcontainer:tag
     tty: true
     stdin_open: true
     tmpfs:
