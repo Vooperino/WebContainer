@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-CLEAN_PATH="/clean/core"
+CLEAN_PATH="/clean"
 
 SCRIPTS_PATH="/scripts"
 CONFIG_PATH="/config"
