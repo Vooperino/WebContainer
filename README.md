@@ -48,6 +48,6 @@ Link to the Docker Hub https://hub.docker.com/r/vooplv/webcontainer-nginx
 
 It is pretty straight forward, once you are in the root git repo directory aka the current repo directory when you will beed to build the core using this command
 ```bash
-docker build -t vooplv/webcontainer:core
+docker build -t vooplv/webcontainer:core .
 ```
 With the core image tag that will allow nginx or openresty images to be build since it does need the Web container core image, because of the packages and files.
