@@ -14,3 +14,17 @@ apt-get install -y php8.0 php8.0-{fpm,common,mysql,gmp,curl,intl,mbstring,xmlrpc
 apt-get install -y php8.1 php8.1-{fpm,common,mysql,gmp,curl,intl,mbstring,xmlrpc,gd,xml,cli,zip,soap,imap,sqlite,bcmath,apcu}
 
 curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
+
+echo "Creating new commands to use"
+cp -r -f -v /scripts/reloadCron.sh /usr/bin/reloadCron
+cp -r -f -v /scripts/reloadPHP.sh /usr/bin/reloadPHP
+cp -r -f -v /scripts/letsencrypt/renewAllCert.sh /usr/bin/renewAllLECert
+cp -r -f -v /scripts/letsencrypt/createLetsEncryptCert.sh /usr/bin/createLECert
+cp -r -f -v /scripts/systemd-replacer/systemctl3.py /usr/bin/sysctl
+
+chmod 555 -R /usr/bin/reloadCron
+chmod 555 -R /usr/bin/reloadPHP
+chmod 555 -R /usr/bin/renewAllLECert
+chmod 555 -R /usr/bin/createLECert
+chmod 555 -R /usr/bin/sysctl
+echo "Task done!"

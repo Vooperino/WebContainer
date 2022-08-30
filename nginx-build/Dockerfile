@@ -1,4 +1,4 @@
-FROM debian:bullseye-slim
+FROM vooplv/webcontainer:core
 ENV DEBIAN_FRONTEND noninteractive
 MAINTAINER voop@voop.lv
 
@@ -9,12 +9,9 @@ COPY ../core_files/scripts scripts
 COPY ../install install
 COPY config config
 
-COPY init.sh init.sh
+COPY /init.sh /init.sh
 
-RUN bash /install/install.sh
 RUN apt-get install nginx -y
-RUN bash /install/cleanConfig.sh
-RUN rm -rf /install
 RUN cp -r -f /scripts/systemd-replacer/systemctl3.py /usr/bin/systemctl
 
 CMD bash /init.sh
