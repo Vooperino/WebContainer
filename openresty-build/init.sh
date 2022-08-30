@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
-nginx_root="/etc/nginx"
-nginx_custom="/config/nginx"
+openresty_root="/usr/local/openresty"
+openresty_custom="/config/openresty"
 
 crontab_file="/config/cronTasks"
 
@@ -50,9 +50,9 @@ if isEmptyDir "/config"; then
     cp -r -f -v $CLEAN_PATH/config/* /config    
 fi
 
-if ! checkDir "/config/nginx"; then
-    output "Failed to validate nginx config directory. Copying defaults"
-    cp -r -f -v $CLEAN_PATH/config/nginx/ /config
+if ! checkDir "/config/openresty"; then
+    output "Failed to validate openresty config directory. Copying defaults"
+    cp -r -f -v $CLEAN_PATH/config/openresty/ /config
 fi
 
 if isEmptyDir "/scripts"; then 
@@ -65,10 +65,12 @@ bash /scripts/pathChecker.sh
 apt-get update
 apt-get full-upgrade -y
 
-#Copy Nginx Stuff
+#Copy Openresty Stuff
 
-#cp -r -f $nginx_custom/* $nginx_root
-#service nginx start
+cp -r -f $openresty_custom/* $openresty_root
+
+sysctl start openresty
+
 service php7.4-fpm start
 service php8.0-fpm start
 service php8.1-fpm start
@@ -79,8 +81,8 @@ if checkFile $crontab_file; then
 fi
 
 if ! checkFile $NEWINSTALL; then
-    echo "New install detected! Tossing a fresh default nginx config!"
-    #cp -r -f -v /clean/config/defaults/default.conf /web/config/nginx/sites-enabled/
+    echo "New install detected! Tossing a fresh default openresty config!"
+    #cp -r -f -v /clean/config/defaults/default.conf /web/config/openresty/sites-enabled/
     rm -rf $NEWINSTALL
 fi
 
@@ -94,3 +96,5 @@ chmod 755 -R /scripts/*
 
 bash $AUTORUN_PATH
 bash
+
+#
