@@ -27,11 +27,11 @@ checkDirAndMake $WEB_NGINX_CONFIG_ENABLED
 checkDirAndMake $WEB_NGINX_CONFIG_DISABLED
 checkDirAndMake $SSL_DIR
 
-if ! checkDir $WEB_DATA; then 
-    mkdir -p "$@"
+if ! checkDir $WEB_DATA; then
     mkdir -p $WEB_DATA/default_page
     cp -r -f /config/defaults/page/webdata/* $WEB_DATA/default_page
     cp -r -f /config/defaults/page/default.conf $WEB_NGINX_CONFIG_ENABLED
+    touch newinstall
 fi
 
 if ! checkFile $AUTORUN_PATH; then
