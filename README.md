@@ -11,9 +11,9 @@ Currently working
 Basic custom made docker web container
 
 ## WebContainers Tags
-*) `core` - is the main source aka the core for other tags, to make things a bit cleaner
-*) `nginx` - Uses Nginx as the web server
-*) `openresty` - Uses OpenResty as the web server
+* `core` - is the main source aka the core for other tags, to make things a bit cleaner
+* `nginx` - Uses Nginx as the web server
+* `openresty` - Uses OpenResty as the web server
 
 
 Currently includes
