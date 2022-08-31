@@ -16,21 +16,21 @@ checkDirAndMake() {
 
 WEB_DATA="/web/data"
 CERT_WEBROOT="/web/cert_webroot"
-WEB_NGINX_CONFIG_ENABLED="/web/config/nginx/sites-enabled"
-WEB_NGINX_CONFIG_DISABLED="/web/config/nginx/sites-disabled"
+WEB_CONFIG_ENABLED="/web/config/sites-enabled"
+WEB_CONFIG_DISABLED="/web/config/sites-disabled"
 SSL_DIR="/web/ssl/"
 AUTORUN_PATH="/web/config/autorun.sh"
 
 
 checkDirAndMake $CERT_WEBROOT
-checkDirAndMake $WEB_NGINX_CONFIG_ENABLED
-checkDirAndMake $WEB_NGINX_CONFIG_DISABLED
+checkDirAndMake $WEB_CONFIG_ENABLED
+checkDirAndMake $WEB_CONFIG_DISABLED
 checkDirAndMake $SSL_DIR
 
 if ! checkDir $WEB_DATA; then
     mkdir -p $WEB_DATA/default_page
     cp -r -f /config/defaults/page/webdata/* $WEB_DATA/default_page
-    cp -r -f /config/defaults/page/default.conf $WEB_NGINX_CONFIG_ENABLED
+    cp -r -f /config/defaults/page/default.conf $WEB_CONFIG_ENABLED
     touch newinstall
 fi
 
