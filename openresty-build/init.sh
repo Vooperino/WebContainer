@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-openresty_root="/usr/local/openresty"
+openresty_root="/usr/local/openresty/nginx/conf"
 openresty_custom="/config/openresty"
 
 crontab_file="/config/cronTasks"
