@@ -5,9 +5,7 @@ This branch is unstable to use for prod! This is a work in progress build its no
 Currently working
 1) Main Core
 2) Nginx
-
-Currently Not Working
-1) OpenResty
+3) OpenResty
 
 # WebContainer
 Basic custom made docker web container
