@@ -10,6 +10,12 @@ Currently working
 # WebContainer
 Basic custom made docker web container
 
+## WebContainers Tags
+*) `core` - is the main source aka the core for other tags, to make things a bit cleaner
+*) `nginx` - Uses Nginx as the web server
+*) `openresty` - Uses OpenResty as the web server
+
+
 Currently includes
 
 * PHP 7.4, 8.0, 8.1 (Including premade nginx/openresty scripts)
@@ -46,7 +52,7 @@ services:
       - "443:443"
     restart: unless-stopped
 ```
-Link to the Docker Hub https://hub.docker.com/r/vooplv/webcontainer-nginx
+Link to the Docker Hub https://hub.docker.com/r/vooplv/webcontainer
 
 
 # Building the Docker images (WIP)
