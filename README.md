@@ -61,4 +61,5 @@ It is pretty straight forward, once you are in the root git repo directory aka t
 ```bash
 docker build -t vooplv/webcontainer:core .
 ```
-With the core image tag that will allow nginx or openresty images to be build since it does need the Web container core image, because of the packages and files.
+or run the build.sh file
+The core image tag will allow nginx or openresty images to be built since it does need the Web container core image, because of the packages and files.
