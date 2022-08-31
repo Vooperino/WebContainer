@@ -2,18 +2,12 @@ FROM debian:bullseye-slim
 ENV DEBIAN_FRONTEND noninteractive
 MAINTAINER voop@voop.lv
 
-EXPOSE 80
-EXPOSE 443
+USER root
 
-COPY scripts scripts
-COPY install install
-COPY config config
-
-COPY init.sh init.sh
+COPY /core_files/scripts /scripts
+COPY /core_files/config /config
+COPY /install /install
 
 RUN bash /install/install.sh
 RUN bash /install/cleanConfig.sh
 RUN rm -rf /install
-RUN cp -r -f /scripts/systemd-replacer/systemctl3.py /usr/bin/systemctl
-
-CMD bash /init.sh
