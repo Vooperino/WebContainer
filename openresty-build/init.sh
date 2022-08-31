@@ -69,7 +69,7 @@ apt-get full-upgrade -y
 
 #Copy Openresty Stuff
 
-cp -r -f $openresty_custom/* $openresty_root
+#cp -r -f $openresty_custom/* $openresty_root
 
 sysctl start openresty
 
