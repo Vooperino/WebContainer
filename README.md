@@ -1,12 +1,3 @@
-# Warning
-
-This branch is unstable to use for prod! This is a work in progress build its not ready what so ever.
-
-Currently working
-1) Main Core
-2) Nginx
-3) OpenResty
-
 # WebContainer
 Basic custom made docker web container
 
