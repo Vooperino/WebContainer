@@ -31,6 +31,7 @@ if isEmptyDir "/config/php"; then
     output "Failed to validate php config directory. Copying defaults"
     cp -r -f -v $CLEAN_PATH/config/php/* $php_custom
 fi
+cp -r -f $php_custom/* $php_root
 
 echo "Start all PHP services"
 
