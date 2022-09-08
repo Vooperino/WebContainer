@@ -3,6 +3,9 @@
 openresty_root="/usr/local/openresty/nginx/conf"
 openresty_custom="/config/openresty"
 
+php_root="/etc/php"
+php_custom="/config/php"
+
 crontab_file="/config/cronTasks"
 
 AUTORUN_PATH="/web/config/autorun.sh"
@@ -50,6 +53,17 @@ if isEmptyDir "/config"; then
     cp -r -f -v $CLEAN_PATH/config/* /config    
 fi
 
+if ! checkDir "/config/php"; then
+    output "Failed to validate php config directory. Copying defaults"
+    mkdir -p $php_custom
+    cp -r -f -v $CLEAN_PATH/config/php/* $php_custom
+fi
+
+if isEmptyDir "/config/php"; then
+    output "Failed to validate php config directory. Copying defaults"
+    cp -r -f -v $CLEAN_PATH/config/php/* $php_custom
+fi
+
 if ! checkDir "/config/openresty"; then
     output "Failed to validate openresty config directory. Copying defaults"
     cp -r -f -v $CLEAN_PATH/config/openresty/ /config
@@ -68,7 +82,9 @@ apt-get full-upgrade -y
 #Copy Openresty Stuff
 
 rm -rf $openresty_root/*
+rm -rf $php_root/*
 cp -r -f $openresty_custom/* $openresty_root
+cp -r -f $php_custom/* $php_root
 
 sysctl start openresty
 

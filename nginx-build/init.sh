@@ -3,6 +3,9 @@
 nginx_root="/etc/nginx"
 nginx_custom="/config/nginx"
 
+php_root="/etc/php"
+php_custom="/config/php"
+
 crontab_file="/config/cronTasks"
 
 AUTORUN_PATH="/web/config/autorun.sh"
@@ -50,6 +53,17 @@ if isEmptyDir "/config"; then
     cp -r -f -v $CLEAN_PATH/config/* /config    
 fi
 
+if ! checkDir "/config/php"; then
+    output "Failed to validate php config directory. Copying defaults"
+    mkdir -p $php_custom
+    cp -r -f -v $CLEAN_PATH/config/php/* $php_custom
+fi
+
+if isEmptyDir "/config/php"; then
+    output "Failed to validate php config directory. Copying defaults"
+    cp -r -f -v $CLEAN_PATH/config/php/* $php_custom
+fi
+
 if ! checkDir "/config/nginx"; then
     output "Failed to validate nginx config directory. Copying defaults"
     cp -r -f -v $CLEAN_PATH/config/nginx/ /config
@@ -67,7 +81,11 @@ apt-get full-upgrade -y
 
 #Copy Nginx Stuff
 
+rm -rf $php_root/*
+
 cp -r -f $nginx_custom/* $nginx_root
+cp -r -f $php_custom/* $php_root
+
 service nginx start
 service php7.4-fpm start
 service php8.0-fpm start

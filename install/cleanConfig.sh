@@ -5,6 +5,8 @@ CLEAN_PATH="/clean"
 SCRIPTS_PATH="/scripts"
 CONFIG_PATH="/config"
 
+PHP_ROOT="/etc/php"
+
 output() {
     echo "Debug: $@"
 }
@@ -16,6 +18,10 @@ mkdir -p $CLEAN_PATH/config
 output "Copying data!"
 cp -r -f -v $SCRIPTS_PATH/* $CLEAN_PATH/scripts
 cp -r -f -v $CONFIG_PATH/* $CLEAN_PATH/config
+
+mkdir $CLEAN_PATH/config/php
+cp -r -f -v $PHP_ROOT/* $CLEAN_PATH/config/php
+
 
 output "Applying script directory permission!"
 chmod 755 -R $CLEAN_PATH/scripts
