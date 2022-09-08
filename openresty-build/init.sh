@@ -66,6 +66,12 @@ fi
 
 if ! checkDir "/config/openresty"; then
     output "Failed to validate openresty config directory. Copying defaults"
+    mkdir -p /config/openresty
+    cp -r -f -v $CLEAN_PATH/config/openresty/ /config
+fi
+
+if isEmptyDir "/config/openresty"; then
+    output "Failed to validate openresty config directory. Copying defaults"
     cp -r -f -v $CLEAN_PATH/config/openresty/ /config
 fi
 
