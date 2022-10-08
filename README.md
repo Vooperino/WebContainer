@@ -45,6 +45,18 @@ services:
 ```
 Link to the Docker Hub https://hub.docker.com/r/vooplv/webcontainer
 
+## If you want to stop the auto package update on the container start up then you will need to an environment variables
+`Docker Command`
+```
+-e UPDATE_ON_LAUNCH=true
+```
+
+`Docker Compose`
+```yml
+environment:
+    UPDATE_ON_LAUNCH: true
+```
+
 
 # Building the Docker images (WIP)
 
