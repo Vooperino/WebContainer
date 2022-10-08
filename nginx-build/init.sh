@@ -77,7 +77,9 @@ fi
 bash /scripts/pathChecker.sh
 
 apt-get update
-apt-get full-upgrade -y
+if [ -z "$UPDATE_ON_LAUNCH" ]; then
+    apt-get full-upgrade -y
+fi
 
 #Copy Nginx Stuff
 
