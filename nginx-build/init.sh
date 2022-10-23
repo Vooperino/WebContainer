@@ -15,6 +15,8 @@ CLEAN_PATH="/clean"
 
 NEWINSTALL="/newinstall"
 
+AUTO_UPDATE="/web/config/.auto_update"
+
 output() {
     echo "Output: $@"
 }
@@ -77,7 +79,7 @@ fi
 bash /scripts/pathChecker.sh
 
 apt-get update
-if [ -z "$UPDATE_ON_LAUNCH" ]; then
+if checkFile $AUTO_UPDATE; then
     apt-get full-upgrade -y
 fi
 
@@ -99,7 +101,7 @@ if checkFile $crontab_file; then
 fi
 
 if ! checkFile $NEWINSTALL; then
-    echo "New install detected! Tossing a fresh default nginx config!"
+    #echo "New install detected! Tossing a fresh default nginx config!"
     #cp -r -f -v /clean/config/defaults/default.conf /web/config/nginx/sites-enabled/
     rm -rf $NEWINSTALL
 fi
