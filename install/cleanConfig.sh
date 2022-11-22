@@ -21,6 +21,10 @@ cp -r -f -v $CONFIG_PATH/* $CLEAN_PATH/config
 
 mkdir $CLEAN_PATH/config/php
 cp -r -f -v $PHP_ROOT/* $CLEAN_PATH/config/php
+output "Configuring PHP Permissions (Temp bugfix)"
+sed -i 's/;listen.mode = 0660/listen.mode = 0666/g' $CLEAN_PATH/config/php/8.1/fpm/pool.d/www.conf
+sed -i 's/;listen.mode = 0660/listen.mode = 0666/g' $CLEAN_PATH/config/php/8.0/fpm/pool.d/www.conf
+sed -i 's/;listen.mode = 0660/listen.mode = 0666/g' $CLEAN_PATH/config/php/7.4/fpm/pool.d/www.conf
 
 
 output "Applying script directory permission!"
