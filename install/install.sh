@@ -9,9 +9,9 @@ sh -c 'echo "deb https://packages.sury.org/php/ $(lsb_release -sc) main" > /etc/
 wget -qO - https://packages.sury.org/php/apt.gpg | apt-key add - 
 apt-get update
 
-apt-get install -y php7.4 php7.4-{fpm,common,mysql,gmp,curl,intl,mbstring,xmlrpc,gd,xml,cli,zip,soap,imap,sqlite3,bcmath,apcu}
-apt-get install -y php8.0 php8.0-{fpm,common,mysql,gmp,curl,intl,mbstring,xmlrpc,gd,xml,cli,zip,soap,imap,sqlite,bcmath,apcu}
-apt-get install -y php8.1 php8.1-{fpm,common,mysql,gmp,curl,intl,mbstring,xmlrpc,gd,xml,cli,zip,soap,imap,sqlite,bcmath,apcu}
+apt-get install -y php7.4 php7.4-{fpm,common,mysql,gmp,curl,intl,mbstring,xmlrpc,gd,xml,cli,zip,soap,imap,sqlite3,bcmath,apcu,zip}
+apt-get install -y php8.0 php8.0-{fpm,common,mysql,gmp,curl,intl,mbstring,xmlrpc,gd,xml,cli,zip,soap,imap,sqlite,bcmath,apcu,zip}
+apt-get install -y php8.1 php8.1-{fpm,common,mysql,gmp,curl,intl,mbstring,xmlrpc,gd,xml,cli,zip,soap,imap,sqlite,bcmath,apcu,zip}
 
 curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
 
