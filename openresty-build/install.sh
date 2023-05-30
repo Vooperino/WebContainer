@@ -1,5 +1,34 @@
+LUA_VER="5.4.6"
+LUAROCK_VER="3.9.2"
+CURRECT_DIR=$(pwd)
+
 apt-get update
-apt-get install libpcre3-dev libssl-dev perl make build-essential curl wget gnupg ca-certificates -y
+apt-get install libpcre3-dev libssl-dev perl make build-essential curl wget gnupg ca-certificates libreadline-dev unzip -y
+
+echo "Installing LUA ($LUA_VER) and LuaRock ($LUAROCK_VER)"
+curl -R -O http://www.lua.org/ftp/lua-${LUA_VER}.tar.gz
+tar -zxf lua-${LUA_VER}.tar.gz
+rm lua-${LUA_VER}.tar.gz
+cd lua-${LUA_VER}
+make linux test
+make install
+cd ${CURRECT_DIR}
+
+wget https://luarocks.org/releases/luarocks-${LUAROCK_VER}.tar.gz
+tar zxpf luarocks-${LUAROCK_VER}.tar.gz
+rm luarocks-${LUAROCK_VER}.tar.gz
+cd luarocks-${LUAROCK_VER}
+./configure --with-lua-include=/usr/local/include
+make install
+cd ${CURRECT_DIR}
+
+rm -rf lua-${LUA_VER}
+rm -rf luarocks-${LUAROCK_VER}
+
+echo "Pre-installing Lua Libs"
+luarocks install lua-resty-openidc
+
+echo "Installing Openresty"
 wget -O - https://openresty.org/package/pubkey.gpg | apt-key add -
 codename=`grep -Po 'VERSION="[0-9]+ \(\K[^)]+' /etc/os-release`
 
