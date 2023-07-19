@@ -66,3 +66,6 @@ docker build -t vooplv/webcontainer:core .
 ```
 or run the build.sh file
 The core image tag will allow nginx or openresty images to be built since it does need the Web container core image, because of the packages and files.
+
+
+`Made in Latvia :)`
