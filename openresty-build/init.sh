@@ -96,6 +96,8 @@ rm -rf $php_root/*
 cp -r -f $openresty_custom/* $openresty_root
 cp -r -f $php_custom/* $php_root
 
+reloadCustomLua
+
 sysctl start openresty
 
 service php7.4-fpm start

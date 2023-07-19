@@ -50,7 +50,9 @@ cp -r -f -v /temp_config/* /config/
 cp -r -f -v /temp_scripts/* /scripts
 
 cp -r -f -v /scripts/reloadWebSrv.sh /usr/bin/reloadWebSrv
+cp -r -f -v /scripts/reloadCustomLua.sh /usr/bin/reloadCustomLua
 chmod 555 -R /usr/bin/reloadWebSrv
+chmod 555 -R /usr/bin/reloadCustomLua
 
 echo "Updating Default page"
 mkdir /usr/local/openresty/nginx/html
