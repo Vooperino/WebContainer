@@ -103,6 +103,8 @@ sysctl start openresty
 service php7.4-fpm start
 service php8.0-fpm start
 service php8.1-fpm start
+service php8.2-fpm start
+service php8.3-fpm start
 service cron start
 
 if checkFile $crontab_file; then

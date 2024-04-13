@@ -11,6 +11,10 @@ output() {
     echo "Debug: $@"
 }
 
+function permissionFixPHP() {
+    sed -i 's/;listen.mode = 0660/listen.mode = 0666/g' $CLEAN_PATH/config/php/"$1"/fpm/pool.d/www.conf
+}
+
 output "Creating Clean Directory"
 mkdir -p $CLEAN_PATH/scripts
 mkdir -p $CLEAN_PATH/config
@@ -21,11 +25,11 @@ cp -r -f -v $CONFIG_PATH/* $CLEAN_PATH/config
 
 mkdir $CLEAN_PATH/config/php
 cp -r -f -v $PHP_ROOT/* $CLEAN_PATH/config/php
-output "Configuring PHP Permissions (Temp bugfix)"
-sed -i 's/;listen.mode = 0660/listen.mode = 0666/g' $CLEAN_PATH/config/php/8.1/fpm/pool.d/www.conf
-sed -i 's/;listen.mode = 0660/listen.mode = 0666/g' $CLEAN_PATH/config/php/8.0/fpm/pool.d/www.conf
-sed -i 's/;listen.mode = 0660/listen.mode = 0666/g' $CLEAN_PATH/config/php/7.4/fpm/pool.d/www.conf
-
+permissionFixPHP "8.3"
+permissionFixPHP "8.2"
+permissionFixPHP "8.1"
+permissionFixPHP "8.0"
+permissionFixPHP "7.4"
 
 output "Applying script directory permission!"
 chmod 755 -R $CLEAN_PATH/scripts
