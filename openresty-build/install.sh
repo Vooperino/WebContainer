@@ -1,5 +1,5 @@
 LUA_VER="5.4.6"
-LUAROCK_VER="3.9.2"
+LUAROCK_VER="3.11.0"
 CURRECT_DIR=$(pwd)
 
 apt-get update
