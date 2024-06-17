@@ -14,6 +14,8 @@ make linux test
 make install
 cd ${CURRECT_DIR}
 
+export PATH=$PATH:/usr/local/bin
+
 wget https://luarocks.org/releases/luarocks-${LUAROCK_VER}.tar.gz
 tar zxpf luarocks-${LUAROCK_VER}.tar.gz
 rm luarocks-${LUAROCK_VER}.tar.gz
