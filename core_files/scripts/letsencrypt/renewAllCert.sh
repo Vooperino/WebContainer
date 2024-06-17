@@ -26,4 +26,9 @@ if ! checkFile $logFile; then
     touch $logFile
 fi
 
-/usr/bin/letsencrypt renew --config-dir $sslDirPath --webroot --webroot-path $certStuffRoot >> /scripts/letsencrypt/letsencrypt-renew.log
+CLOUDFLARE_OPTS=""
+if [ -d "/cloudflare-account.ini" ]; then
+    CLOUDFLARE_OPTS+="--dns-cloudflare --dns-cloudflare-credentials /cloudflare-account.ini"
+fi
+
+certbot renew $CLOUDFLARE_OPTS --config-dir $sslDirPath --webroot --webroot-path $certStuffRoot >> /scripts/letsencrypt/letsencrypt-renew.log
