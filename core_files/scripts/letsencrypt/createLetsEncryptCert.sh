@@ -17,7 +17,7 @@ if ! checkDir $sslDirPath; then
 fi
 
 WEBROOT_OPTS="--webroot --webroot-path $certStuffRoot"
-if [ -d "/cloudflare-account.ini" ]; then
+if [ -f "/cloudflare-account.ini" ]; then
     echo "Using CloudFlare API for DNS"
     WEBROOT_OPTS="--dns-cloudflare --dns-cloudflare-credentials /cloudflare-account.ini"
 fi
