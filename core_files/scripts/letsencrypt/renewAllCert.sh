@@ -17,7 +17,7 @@ if ! checkDir $certStuffRoot; then
 fi
 
 if ! checkDir $sslDirPath; then
-    echo "Creating ssl folder"
+    echo "Creating SSL folder"
     mkdir -p $sslDirPath
 fi
 
@@ -26,9 +26,10 @@ if ! checkFile $logFile; then
     touch $logFile
 fi
 
-CLOUDFLARE_OPTS=""
+WEBROOT_OPTS="--webroot --webroot-path $certStuffRoot"
 if [ -d "/cloudflare-account.ini" ]; then
-    CLOUDFLARE_OPTS+="--dns-cloudflare --dns-cloudflare-credentials /cloudflare-account.ini"
+    echo "Using CloudFlare API for DNS"
+    WEBROOT_OPTS="--dns-cloudflare --dns-cloudflare-credentials /cloudflare-account.ini"
 fi
 
-certbot renew $CLOUDFLARE_OPTS --config-dir $sslDirPath --webroot --webroot-path $certStuffRoot >> /scripts/letsencrypt/letsencrypt-renew.log
+certbot renew --config-dir $sslDirPath $WEBROOT_OPTS >> /scripts/letsencrypt/letsencrypt-renew.log
