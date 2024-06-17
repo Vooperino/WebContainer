@@ -6,7 +6,7 @@ apt-get update
 apt-get install libpcre3-dev libssl-dev perl make build-essential curl wget gnupg ca-certificates libreadline-dev unzip -y
 
 echo "Installing LUA ($LUA_VER) and LuaRock ($LUAROCK_VER)"
-curl -R -O http://www.lua.org/ftp/lua-${LUA_VER}.tar.gz
+curl -R -O https://www.lua.org/ftp/lua-${LUA_VER}.tar.gz
 tar -zxf lua-${LUA_VER}.tar.gz
 rm lua-${LUA_VER}.tar.gz
 cd lua-${LUA_VER}
