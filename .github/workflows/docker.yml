@@ -1,5 +1,6 @@
 name: Build and Deploy
 
+wotkflow_dispatch: {}
 on:
   push:
     branches: main
