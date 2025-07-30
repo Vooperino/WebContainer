@@ -1,0 +1,69 @@
+name: Build Container
+
+on:
+  workflow_call:
+    inputs:
+      image_name:
+        description: 'Name of the Docker image to build'
+        required: true
+        type: string
+      image_tag:
+        description: 'Tag for the Docker image'
+        required: true
+        type: string
+      dockerfile_path:
+        description: 'Path to the Dockerfile'
+        required: true
+        type: string
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4.2.2
+      - name: Validate Arguemnts
+        run: |
+          if [ -z "${{ inputs.image_name }}" ]; then
+            echo "::error title=Config Error::Image name is required"
+            exit 1
+          fi
+          if [ -z "${{ inputs.image_tag }}" ]; then
+            echo "::error title=Config Error::Image tag is required"
+            exit 1
+          fi
+          if [ -z "${{ inputs.dockerfile_path }}" ]; then
+            echo "::error title=Config Error::Dockerfile path is required"
+            exit 1
+          fi
+          echo "Dockerfile path: ${{ inputs.dockerfile_path }}"
+          echo "Image name: ${{ inputs.image_name }}"
+          echo "Image tag: ${{ inputs.image_tag }}"
+      - name: Validate Dockerfile
+        run: |
+          if [ ! -f "${{ inputs.dockerfile_path }}/Dockerfile" ]; then
+            echo "Dockerfile not found at ${{ inputs.dockerfile_path }}"
+            exit 1
+          fi
+          echo "Dockerfile found at ${{ inputs.dockerfile_path }}"
+  build:
+    runs-on: ubuntu-latest
+    needs: validate
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4.2.2
+      - name: Build Docker image
+        run: |
+          cd ${{ inputs.dockerfile_path }}
+          echo "[INFO] Building Docker image ${{ inputs.image_name }}:${{ inputs.image_tag }} from ${{ inputs.dockerfile_path }}/Dockerfile"
+          docker build -t ${{ inputs.image_name }}:${{ inputs.image_tag }} -f ${{ inputs.dockerfile_path }}/Dockerfile .
+      - name: Log in to Docker Hub
+        uses: docker/login-action@v3.4.0
+        with:
+          username: ${{ secrets.DOCKER_HUB_USERNAME }}
+          password: ${{ secrets.DOCKER_HUB_PASSWORD }}
+      - name: Push Docker image
+        run: docker push ${{ inputs.image_name }}:${{ inputs.image_tag }}
+      - name: Log out from Docker Hub
+        run: docker logout
+      
