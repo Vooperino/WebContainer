@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 
 # WORK IN PROGRESS
-
-ROOT_SUPERVISOR_PATH="/vl/supervisor"
+ROOT_PATH="/vl"
+ROOT_SUPERVISOR_PATH="${ROOT_PATH}/supervisor"
 TEMP_CONFIG_PATH="/tmp/supervisor.conf"
 
 function validatePath() {
@@ -52,8 +52,20 @@ function applyFromConfig() {
                 echo "" >> "$TEMP_CONFIG_PATH"
             fi
         done < "$config_file"
+        echo "[INFO] Configuration from $config_file applied successfully."
     fi
 }
+
+echo "[NOTICE] WORK IN PROGRESS: This script is under development and may not function as expected."
+
+if [[ ! -d "$ROOT_SUPERVISOR_PATH" ]]; then
+    mkdir -p "$ROOT_SUPERVISOR_PATH"
+    if [[ $? -ne 0 ]]; then
+        echo "[ERROR] Failed to create directory: $ROOT_SUPERVISOR_PATH"
+        exit 1
+    fi
+    echo "[INFO] Created directory: $ROOT_SUPERVISOR_PATH"
+fi
 
 if [ -f "$TEMP_CONFIG_PATH" ]; then
     echo "[INFO] Removing existing temporary configuration file..."
@@ -63,7 +75,7 @@ fi
 touch "$TEMP_CONFIG_PATH"
 echo "[INFO] Temporary configuration file created at $TEMP_CONFIG_PATH."
 
-applyFromConfig "${ROOT_SUPERVISOR_PATH}/1_core.conf"
+applyFromConfig "${ROOT_SUPERVISOR_PATH}/core.conf"
 
 if [[ ! -z "${BACKEND_RENEW_LESSL}" ]]; then
     BACKEND_RENEW_LESSL=$(echo "${BACKEND_RENEW_LESSL}" | tr '[:upper:]' '[:lower:]')
@@ -84,3 +96,16 @@ generatePHPConfig "8.1"
 generatePHPConfig "8.2"
 generatePHPConfig "8.3"
 
+if [[ -f "${ROOT_SUPERVISOR_PATH}/1_pack.conf" ]]; then
+    echo "[INFO] Applying pack configuration..."
+    applyFromConfig "${ROOT_SUPERVISOR_PATH}/1_pack.conf"
+else
+    echo "[ERROR] Pack configuration file not found: ${ROOT_SUPERVISOR_PATH}/1_pack.conf [Build issue?]"
+    exit 1
+fi
+
+echo "[INFO] Moving temporary configuration to final location..."
+mv "$TEMP_CONFIG_PATH" "${ROOT_PATH}/supervisor.conf"
+echo "[INFO] Supervisor configuration generated successfully at ${ROOT_PATH}/supervisor.conf"
+echo "[INFO] Supervisor configuration generation completed."
+exit 0
