@@ -65,6 +65,19 @@ echo "[INFO] Temporary configuration file created at $TEMP_CONFIG_PATH."
 
 applyFromConfig "${ROOT_SUPERVISOR_PATH}/1_core.conf"
 
+if [[ ! -z "${BACKEND_RENEW_LESSL}" ]]; then
+    BACKEND_RENEW_LESSL=$(echo "${BACKEND_RENEW_LESSL}" | tr '[:upper:]' '[:lower:]')
+    if [[ "${BACKEND_RENEW_LESSL}" != "true" && "${BACKEND_RENEW_LESSL}" != "false" ]]; then
+        echo "[ERROR] BACKEND_RENEW_LESSL must be set to 'true' or 'false'."
+    fi
+    if [[ "${BACKEND_RENEW_LESSL}" != "true" ]]; then
+        echo "[INFO] BACKEND_RENEW_LESSL is not set to true"
+    else
+        echo "[INFO] BACKEND_RENEW_LESSL is set to true, applying le_ssl_new.conf"
+        applyFromConfig "${ROOT_SUPERVISOR_PATH}/optional/le_ssl_new.conf"
+    fi
+fi
+
 generatePHPConfig "7.4"
 generatePHPConfig "8.0"
 generatePHPConfig "8.1"
