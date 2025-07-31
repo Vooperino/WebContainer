@@ -2,10 +2,7 @@
 
 # WORK IN PROGRESS
 
-CORE_SURPERVISOR_CONFIG_PATH=""
-MODULE_SURPERVISOR_CONFIG_PATH=""
-USER_SURPERVISOR_CONFIG_PATH=""
-
+ROOT_SUPERVISOR_PATH="/vl/supervisor"
 TEMP_CONFIG_PATH="/tmp/supervisor.conf"
 
 function validatePath() {
@@ -29,7 +26,7 @@ function generatePHPConfig() {
         if [[ ! "$version" =~ ^[0-9]+\.[0-9]+$ ]]; then
             echo "Error: Invalid PHP version format. Expected format is X.Y (e.g., 8.0, 7.1)."
         else
-            local template_file="/path/to/phptemplatefpm.conf"
+            local template_file="${ROOT_SUPERVISOR_PATH}/templates/phpfpm.conf"
             if [[ -f "$template_file" ]]; then
                 while IFS= read -r line; do
                     if [[ -n "$line" ]]; then
@@ -58,12 +55,6 @@ function applyFromConfig() {
     fi
 }
 
-
-echo "[INFO] Validating paths for supervisor configuration files..."
-validatePath "$CORE_SURPERVISOR_CONFIG_PATH"
-validatePath "$MODULE_SURPERVISOR_CONFIG_PATH"
-echo "[INFO] Paths validated successfully."
-
 if [ -f "$TEMP_CONFIG_PATH" ]; then
     echo "[INFO] Removing existing temporary configuration file..."
     rm "$TEMP_CONFIG_PATH"
@@ -71,3 +62,12 @@ fi
 
 touch "$TEMP_CONFIG_PATH"
 echo "[INFO] Temporary configuration file created at $TEMP_CONFIG_PATH."
+
+applyFromConfig "${ROOT_SUPERVISOR_PATH}/1_core.conf"
+
+generatePHPConfig "7.4"
+generatePHPConfig "8.0"
+generatePHPConfig "8.1"
+generatePHPConfig "8.2"
+generatePHPConfig "8.3"
+
