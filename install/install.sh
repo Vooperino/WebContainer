@@ -1,5 +1,18 @@
 #!/usr/bin/env bash
 
+SUPERCRON_VERSION="0.2.34"
+
+get_arch() {
+    local arch=$(uname -m)
+    case "$arch" in
+        x86_64) echo "amd64" ;;
+        aarch64) echo "arm64" ;;
+        armv7l) echo "arm" ;;
+        *) echo "Unsupported architecture: $arch" && exit 1 ;;
+    esac
+}
+
+
 apt-get update
 apt-get full-upgrade -y
 
@@ -17,16 +30,24 @@ apt-get install -y php8.3 php8.3-{fpm,common,mysql,gmp,curl,intl,mbstring,xmlrpc
 
 curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
 
-echo "Creating new commands to use"
+echo "[INFO] Creating new commands to use"
 cp -r -f -v /scripts/reloadCron.sh /usr/bin/reloadCron
 cp -r -f -v /scripts/reloadPHP.sh /usr/bin/reloadPHP
 cp -r -f -v /scripts/letsencrypt/renewAllCert.sh /usr/bin/renewAllLECert
 cp -r -f -v /scripts/letsencrypt/createLetsEncryptCert.sh /usr/bin/createLECert
-cp -r -f -v /scripts/systemd-replacer/systemctl3.py /usr/bin/sysctl
 
 chmod 555 -R /usr/bin/reloadCron
 chmod 555 -R /usr/bin/reloadPHP
 chmod 555 -R /usr/bin/renewAllLECert
 chmod 555 -R /usr/bin/createLECert
-chmod 555 -R /usr/bin/sysctl
-echo "Task done!"
+
+echo "[INFO] Installing supercronic"
+ARCH=$(get_arch)
+mkdir -p /tmp/supercron-dl
+cd /tmp/supercron-dl
+curl -fsSLO https://github.com/aptible/supercronic/releases/download/v${SUPERCRON_VERSION}/supercronic-linux-${ARCH}
+mv supercronic-linux-${ARCH} supercronic
+chmod +x supercronic
+mv supercronic /usr/local/bin/supercronic
+
+echo "[INFO] Task done!"
