@@ -108,3 +108,4 @@ fi
 
 chmod 755 -R /scripts/*
 
+supervisord -c /vl/supervisord.conf

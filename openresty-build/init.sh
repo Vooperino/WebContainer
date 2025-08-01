@@ -115,3 +115,5 @@ if ! checkFile $AUTORUN_PATH; then
 fi
 
 chmod 755 -R /scripts/*
+
+supervisord -c /vl/supervisord.conf
