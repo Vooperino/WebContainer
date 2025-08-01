@@ -2,7 +2,7 @@
 
 SUPERCRON_VERSION="0.2.34"
 
-get_arch() {
+function get_arch() {
     local arch=$(uname -m)
     case "$arch" in
         x86_64) echo "amd64" ;;
@@ -12,7 +12,12 @@ get_arch() {
     esac
 }
 
+if [[ ! -d "/vl" ]]; then
+    echo "[ERROR] This script must be run from the /vl directory. (BUILD ISSUE/FAULT)"
+    exit 1
+fi
 
+echo "[INFO] Starting installation of required packages and tools"
 apt-get update
 apt-get full-upgrade -y
 
@@ -35,11 +40,13 @@ cp -r -f -v /scripts/reloadCron.sh /usr/bin/reloadCron
 cp -r -f -v /scripts/reloadPHP.sh /usr/bin/reloadPHP
 cp -r -f -v /scripts/letsencrypt/renewAllCert.sh /usr/bin/renewAllLECert
 cp -r -f -v /scripts/letsencrypt/createLetsEncryptCert.sh /usr/bin/createLECert
+cp -r -f -v /scripts/generateSupervisorConfig.sh /usr/bin/generateSupervisorConfig
 
 chmod 555 -R /usr/bin/reloadCron
 chmod 555 -R /usr/bin/reloadPHP
 chmod 555 -R /usr/bin/renewAllLECert
 chmod 555 -R /usr/bin/createLECert
+chmod 555 -R /usr/bin/generateSupervisorConfig
 
 echo "[INFO] Installing supercronic"
 ARCH=$(get_arch)
