@@ -33,6 +33,17 @@ isEmptyDir() {
     [ -n "$(find "$@" -maxdepth 0 -type d -empty 2>/dev/null)" ]
 }
 
+if [[ -z "${BACKEND_RENEW_LESSL}" ]]; then
+    BACKEND_RENEW_LESSL=false
+else
+    if [[ "${BACKEND_RENEW_LESSL}" != "true" && "${BACKEND_RENEW_LESSL}" != "false" ]]; then
+        echo "[WARNING] BACKEND_RENEW_LESSL must be set to 'true' or 'false'. Defaulting to 'false'."
+        unset BACKEND_RENEW_LESSL
+        BACKEND_RENEW_LESSL=false
+        sleep 5
+    fi
+fi
+
 generateSupervisorConfig
 
 if checkDir "/clean"; then
