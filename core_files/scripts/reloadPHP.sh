@@ -1,42 +1,26 @@
 #!/usr/bin/env bash
 
-isEmptyDir() {
-    [ -n "$(find "$@" -maxdepth 0 -type d -empty 2>/dev/null)" ]
-}
+SUPERVISOR_CONFIG="/vl/supervisord.conf"
 
-checkDir() {
-    [ -d "$@" ]
-}
-
-
-php_root="/etc/php"
-php_custom="/config/php"
-php_clean="/clean/config/php"
-
-echo "Stopping all PHP services"
-
-service php7.4-fpm stop
-service php8.0-fpm stop
-service php8.1-fpm stop
-
-echo "Copying Configuration"
-rm -rf $php_root/*
-if ! checkDir "/config/php"; then
-    output "Failed to validate php config directory. Copying defaults"
-    mkdir -p $php_custom
-    cp -r -f -v $CLEAN_PATH/config/php/* $php_custom
+if [[ ! -f "$SUPERVISOR_CONFIG" ]]; then
+    echo "Supervisor configuration file not found: $SUPERVISOR_CONFIG"
+    exit 1
 fi
 
-if isEmptyDir "/config/php"; then
-    output "Failed to validate php config directory. Copying defaults"
-    cp -r -f -v $CLEAN_PATH/config/php/* $php_custom
-fi
-cp -r -f $php_custom/* $php_root
+restartPHP() {
+    local version="$1"
+    local service_name="php${version}-fpm"
+    if supervisorctl status | grep -q "$service_name"; then
+        echo "Restarting $service_name..."
+        supervisorctl restart "$service_name"
+        echo "$service_name restarted successfully."
+    else
+        echo "Service $service_name not found in Supervisor."
+    fi
+}
 
-echo "Start all PHP services"
-
-service php7.4-fpm start
-service php8.0-fpm start
-service php8.1-fpm start
-
-echo "End of reload script!"
+restartPHP "7.4"
+restartPHP "8.0"
+restartPHP "8.1"
+restartPHP "8.2"
+restartPHP "8.3"

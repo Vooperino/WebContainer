@@ -1,8 +1,10 @@
 #!/usr/bin/env bash
 
-crontab_file="/config/cronTasks"
+SUPERVISOR_CONFIG="/vl/supervisord.conf"
 
-service cron stop
-service cron start
-crontab -u root $crontab_file
-echo "Cron service reloaded!"
+if [[ ! -f "$SUPERVISOR_CONFIG" ]]; then
+    echo "Supervisor configuration file not found: $SUPERVISOR_CONFIG"
+    exit 1
+fi
+
+supervisorctl -c "$SUPERVISOR_CONFIG" restart supercronic
