@@ -5,6 +5,19 @@ ROOT_PATH="/vl"
 ROOT_SUPERVISOR_PATH="${ROOT_PATH}/supervisor"
 USER_PROVIDED_CONFIG_PATH="/config/supervisor-usr.conf"
 TEMP_CONFIG_PATH="/tmp/supervisor.conf"
+LOCK_FILE="/tmp/supervisor_config.lock"
+
+if [[ -f "$LOCK_FILE" ]]; then
+    echo "[ERROR] Generation of supervisor configuration was executed! Please restart the container to generate a new configuration."
+    exit 1
+else
+    echo "[INFO] Creating lock file to prevent multiple executions..."
+    touch "$LOCK_FILE"
+    if [[ $? -ne 0 ]]; then
+        echo "[ERROR] Failed to create lock file: $LOCK_FILE"
+        exit 1
+    fi
+fi
 
 cleanUpTemp() {
     if [[ -f "$TEMP_CONFIG_PATH" ]]; then
