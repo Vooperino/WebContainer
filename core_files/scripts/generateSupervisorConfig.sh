@@ -3,6 +3,7 @@
 # WORK IN PROGRESS
 ROOT_PATH="/vl"
 ROOT_SUPERVISOR_PATH="${ROOT_PATH}/supervisor"
+USER_PROVIDED_CONFIG_PATH="/config/supervisor-usr.conf"
 TEMP_CONFIG_PATH="/tmp/supervisor.conf"
 
 cleanUpTemp() {
@@ -121,6 +122,13 @@ if [[ -f "${ROOT_SUPERVISOR_PATH}/1_pack.conf" ]]; then
 else
     echo "[ERROR] Pack configuration file not found: ${ROOT_SUPERVISOR_PATH}/1_pack.conf [Build issue?]"
     exit 1
+fi
+
+if [[ -f "${USER_PROVIDED_CONFIG_PATH}" ]]; then
+    echo "[INFO] Applying user-provided configuration from ${USER_PROVIDED_CONFIG_PATH}..."
+    applyFromConfig "${USER_PROVIDED_CONFIG_PATH}"
+else
+    echo "[INFO] No user-provided configuration file found at ${USER_PROVIDED_CONFIG_PATH}. Skipping."
 fi
 
 echo "[INFO] Moving temporary configuration to final location..."
