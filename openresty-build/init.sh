@@ -33,6 +33,8 @@ isEmptyDir() {
     [ -n "$(find "$@" -maxdepth 0 -type d -empty 2>/dev/null)" ]
 }
 
+generateSupervisorConfig
+
 if checkDir "/clean"; then
     if isEmptyDir $CLEAN_PATH; then
         output "Clean configuration was not found! Corrupt of incomplete docker build of this container! Exiting"
