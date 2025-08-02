@@ -5,6 +5,22 @@ ROOT_PATH="/vl"
 ROOT_SUPERVISOR_PATH="${ROOT_PATH}/supervisor"
 TEMP_CONFIG_PATH="/tmp/supervisor.conf"
 
+cleanUpTemp() {
+    if [[ -f "$TEMP_CONFIG_PATH" ]]; then
+        echo "[INFO] Cleaning up temporary configuration file..."
+        rm "$TEMP_CONFIG_PATH"
+        echo "[INFO] Temporary configuration file removed."
+    else
+        echo "[INFO] No temporary configuration file to clean up."
+    fi
+}
+
+trap cleanUpTemp EXIT SIGHUP SIGINT SIGTERM
+
+addSpacer () {
+    echo "" >> "$TEMP_CONFIG_PATH"
+}
+
 function validatePath() {
     local path="$1"
     if [[ -z "$path" ]]; then
@@ -28,6 +44,7 @@ function generatePHPConfig() {
         else
             local template_file="${ROOT_SUPERVISOR_PATH}/templates/phpfpm.conf"
             if [[ -f "$template_file" ]]; then
+                addSpacer
                 while IFS= read -r line; do
                     if [[ -n "$line" ]]; then
                         echo "$line" | sed "s/{PHP_VERSION}/$version/g" >> "$TEMP_CONFIG_PATH"
@@ -45,6 +62,7 @@ function applyFromConfig() {
         echo "Error: Configuration file '$config_file' does not exist."
     else
         echo "[INFO] Applying configuration from $config_file to $TEMP_CONFIG_PATH..."
+        addSpacer
         while IFS= read -r line; do
             if [[ -n "$line" ]]; then
                 echo "$line" >> "$TEMP_CONFIG_PATH"
@@ -90,6 +108,7 @@ if [[ ! -z "${BACKEND_RENEW_LESSL}" ]]; then
     fi
 fi
 
+addSpacer
 generatePHPConfig "7.4"
 generatePHPConfig "8.0"
 generatePHPConfig "8.1"
