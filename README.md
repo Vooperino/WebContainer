@@ -16,12 +16,11 @@ Basic custom made docker web container
 
 Currently includes
 
-* PHP 7.4, 8.0, 8.1, 8.2, 8.3 (Including premade nginx/openresty scripts)
+* PHP 7.4, 8.3 (Including premade nginx/openresty scripts)
 * Nginx or Openresty (Depends what you going to use)
 * Cron
 * Python 3 and 2
 * PHP Composer
-* Systemd replacer (Python) - *Incase if you want to use Pterodactyl or Pelican, you will need to use it for the service*
 * Certbot or LetsEncrypt
 
 When using this docker container its best to use docker-compose
