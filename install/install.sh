@@ -57,7 +57,6 @@ curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin
 echo "[INFO] Creating new commands to use"
 
 createCMD "reloadCron"
-createCMD "reloadPHP"
 createCMD "renewAllLECert"
 createCMD "createLECert"
 createCMD "generateSupervisorConfig"
