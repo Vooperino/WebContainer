@@ -3,9 +3,9 @@ run-name: Build Containers AMD64
 
 on:
   workflow_dispatch: {}
-  #push:
-  #  branches:
-  #    - main
+  push:
+    branches:
+      - main
 
 jobs:
   build_core_amd64:
