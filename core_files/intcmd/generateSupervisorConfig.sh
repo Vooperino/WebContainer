@@ -2,7 +2,7 @@
 
 # WORK IN PROGRESS
 ROOT_PATH="/vl"
-ROOT_SUPERVISOR_PATH="${ROOT_PATH}/supervisor"
+ROOT_SUPERVISOR_PATH="${ROOT_PATH}/supervisord"
 USER_PROVIDED_CONFIG_PATH="/config/supervisor-usr.conf"
 TEMP_CONFIG_PATH="/tmp/supervisor.conf"
 LOCK_FILE="/tmp/supervisor_config.lock"
@@ -31,7 +31,7 @@ cleanUpTemp() {
 
 trap cleanUpTemp EXIT SIGHUP SIGINT SIGTERM
 
-addSpacer () {
+addSpacer() {
     echo "" >> "$TEMP_CONFIG_PATH"
 }
 
@@ -64,6 +64,7 @@ function generatePHPConfig() {
                         echo "$line" | sed "s/{PHP_VERSION}/$version/g" >> "$TEMP_CONFIG_PATH"
                     else
                         echo "" >> "$TEMP_CONFIG_PATH"
+                    fi
                 done < "$template_file"
             fi
         fi
@@ -73,7 +74,7 @@ function generatePHPConfig() {
 function applyFromConfig() {
     local config_file="$1"
     if [[ ! -f "$config_file" ]]; then
-        echo "Error: Configuration file '$config_file' does not exist."
+        echo "[ERROR] Configuration file '$config_file' does not exist."
     else
         echo "[INFO] Applying configuration from $config_file to $TEMP_CONFIG_PATH..."
         addSpacer
