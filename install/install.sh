@@ -33,6 +33,9 @@ apt-get install -y php8.1 php8.1-{fpm,common,mysql,gmp,curl,intl,mbstring,xmlrpc
 apt-get install -y php8.2 php8.2-{fpm,common,mysql,gmp,curl,intl,mbstring,xmlrpc,gd,xml,cli,zip,soap,imap,sqlite,bcmath,apcu,zip,phar,iconv}
 apt-get install -y php8.3 php8.3-{fpm,common,mysql,gmp,curl,intl,mbstring,xmlrpc,gd,xml,cli,zip,soap,imap,sqlite,bcmath,apcu,zip,phar,iconv}
 
+mkdir -p /run/php
+mkdir -p /var/run/supervisord
+
 curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
 
 echo "[INFO] Creating new commands to use"
@@ -40,13 +43,17 @@ cp -r -f -v /scripts/reloadCron.sh /usr/bin/reloadCron
 cp -r -f -v /scripts/reloadPHP.sh /usr/bin/reloadPHP
 cp -r -f -v /scripts/letsencrypt/renewAllCert.sh /usr/bin/renewAllLECert
 cp -r -f -v /scripts/letsencrypt/createLetsEncryptCert.sh /usr/bin/createLECert
-cp -r -f -v /scripts/generateSupervisorConfig.sh /usr/bin/generateSupervisorConfig
+cp -r -f -v /intcmd/generateSupervisorConfig.sh /usr/bin/generateSupervisorConfig
+cp -r -f -v /intcmd/applypermissions.sh /usr/bin/applypermissions
 
 chmod 555 -R /usr/bin/reloadCron
 chmod 555 -R /usr/bin/reloadPHP
 chmod 555 -R /usr/bin/renewAllLECert
 chmod 555 -R /usr/bin/createLECert
 chmod 555 -R /usr/bin/generateSupervisorConfig
+chmod 555 -R /usr/bin/applypermissions
+
+rm -rf /intcmd
 
 echo "[INFO] Installing supercronic"
 ARCH=$(get_arch)
