@@ -9,10 +9,10 @@ on:
 jobs:
   build_core:
     name: Build Core Container
-    uses: ./.github/workflows/build_container.yml
+    uses: ./.github/workflows/build_container_template.yml
     secrets: inherit
     with:
-      image_name: 'vooplv/webcontainer'
+      image_name: 'webcontainer'
       image_tag: 'dev'
       type: 'core'
 

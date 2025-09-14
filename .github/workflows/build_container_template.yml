@@ -85,7 +85,9 @@ jobs:
           username: ${{ secrets.DOCKER_HUB_USERNAME }}
           password: ${{ secrets.DOCKER_HUB_PASSWORD }}
       - name: Push Docker image to Docker Hub
-        run: docker push ${{ inputs.image_name }}:${{ inputs.type }}-${{ inputs.image_tag }}
+        run: |
+          docker tag ${{ inputs.image_name }}:${{ inputs.type }}-${{ inputs.image_tag }} vooplv/${{ inputs.image_name }}:${{ inputs.type }}-${{ inputs.image_tag }}
+          docker push vooplv/${{ inputs.image_name }}:${{ inputs.type }}-${{ inputs.image_tag }}
       - name: Log out from Docker Hub
         run: docker logout
       - name: Log in to GH Container Registry
