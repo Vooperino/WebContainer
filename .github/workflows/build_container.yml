@@ -96,8 +96,9 @@ jobs:
           password: ${{ secrets.GITHUB_TOKEN }}
       - name: Tag and Push to GHCR
         run: |
-          docker tag ${{ inputs.image_name }}:${{ inputs.type }}-${{ inputs.image_tag }} ghcr.io/${{ github.repository_owner }}/${{ inputs.image_name }}:${{ inputs.type }}-${{ inputs.image_tag }}
-          docker push ghcr.io/${{ github.repository_owner }}/${{ inputs.image_name }}:${{ inputs.type }}-${{ inputs.image_tag }}
+          GH_PATH=${{ github.repository_owner }}
+          docker tag ${{ inputs.image_name }}:${{ inputs.type }}-${{ inputs.image_tag }} ghcr.io/${GH_PATH,,}/${{ inputs.image_name }}:${{ inputs.type }}-${{ inputs.image_tag }}
+          docker push ghcr.io/${GH_PATH,,}/${{ inputs.image_name }}:${{ inputs.type }}-${{ inputs.image_tag }}
       - name: Log out from Docker GHCR
         run: docker logout
       
