@@ -88,6 +88,10 @@ jobs:
             export CI_BASENAME_OVERRIDE=${{ inputs.image_name }}
           fi
 
+          if [ ! -z "${CI_BASECORE_OVERRIDE}" ]; then
+            echo "Using core image override: ${CI_BASECORE_OVERRIDE}"
+          fi
+
           ./build-images.sh $BSH_ARG
       - name: Run Trivy vulnerability scanner
         uses: aquasecurity/trivy-action@0.33.1
