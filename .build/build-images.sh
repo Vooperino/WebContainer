@@ -6,6 +6,52 @@ ROOT_DIR=$(cd ${SCRIPT_DIR}/..; pwd)
 BASE_IMAGE_NAME="vooplv/webcontainer"
 BASE_TAG="dev"
 
+S_SET_ALL=true
+S_SET_OPENRESTY_ONLY=false
+S_SET_NGINX_ONLY=false
+S_SET_CORE_ONLY=false
+
+function print_usage() {
+    echo "Usage: $0 [options]"
+    echo "Options:"
+    echo "  --openresty-only    Build only the OpenResty image"
+    echo "  --nginx-only        Build only the Nginx image"
+    echo "  --core-only         Build only the Core image"
+    echo "  -h, --help          Show this help message and exit"
+}
+
+while [[ $# -gt 0 ]]; do
+    key="$1"
+    case $key in
+        -h|--help)
+            print_usage
+            exit 0
+            ;;
+        --openresty-only)
+            unset S_SET_ALL S_SET_OPENRESTY_ONLY
+            S_SET_ALL=false
+            S_SET_OPENRESTY_ONLY=true
+            ;;
+        --nginx-only )
+            unset S_SET_ALL S_SET_NGINX_ONLY
+            S_SET_ALL=false
+            S_SET_NGINX_ONLY=true
+            ;;
+        --core-only)
+            unset S_SET_ALL S_SET_CORE_ONLY
+            S_SET_ALL=false
+            S_SET_CORE_ONLY=true
+            ;;
+        *)
+            echo "Error: Unrecognized option '$key'"
+            print_usage
+            exit 1
+            ;;
+    esac
+    shift
+done
+
+
 function build_image() {
     local image_name=$1
     local dockerfile_path=$2
@@ -15,21 +61,22 @@ function build_image() {
     docker build -t ${image_name} -f ${dockerfile_path} ${context_path}
 }
 
-function check_image_and_remove() {
-    local image_name=$1
+if [ "$S_SET_ALL" = true ] || [ "$S_SET_CORE_ONLY" = true ]; then
+    echo "Building Core Image..."
+    docker rmi -f "${BASE_IMAGE_NAME}:core-${BASE_TAG}" || true
+    build_image "${BASE_IMAGE_NAME}:core-${BASE_TAG}" "${ROOT_DIR}/Dockerfile" "${ROOT_DIR}"
+fi
 
-    if docker images | grep -q "${image_name}"; then
-        echo "Removing existing image ${image_name}..."
-        docker rmi -f ${image_name}
-    fi
-}
+if [ "$S_SET_ALL" = true ] || [ "$S_SET_NGINX_ONLY" = true ]; then
+    echo "Building Nginx Image..."
+    docker rmi -f "${BASE_IMAGE_NAME}:nginx-${BASE_TAG}" || true
+    build_image "${BASE_IMAGE_NAME}:nginx-${BASE_TAG}" "${ROOT_DIR}/nginx-build/Dockerfile" "${ROOT_DIR}/nginx-build"
+fi
 
-check_image_and_remove "${BASE_IMAGE_NAME}:core-${BASE_TAG}"
-check_image_and_remove "${BASE_IMAGE_NAME}:nginx-${BASE_TAG}"
-check_image_and_remove "${BASE_IMAGE_NAME}:openresty-${BASE_TAG}"
-
-build_image "${BASE_IMAGE_NAME}:core-${BASE_TAG}" "${ROOT_DIR}/Dockerfile" "${ROOT_DIR}"
-build_image "${BASE_IMAGE_NAME}:nginx-${BASE_TAG}" "${ROOT_DIR}/nginx-build/Dockerfile" "${ROOT_DIR}/nginx-build"
-build_image "${BASE_IMAGE_NAME}:openresty-${BASE_TAG}" "${ROOT_DIR}/openresty-build/Dockerfile" "${ROOT_DIR}/openresty-build"
+if [ "$S_SET_ALL" = true ] || [ "$S_SET_OPENRESTY_ONLY" = true ]; then
+    echo "Building OpenResty Image..."
+    docker rmi -f "${BASE_IMAGE_NAME}:openresty-${BASE_TAG}" || true
+    build_image "${BASE_IMAGE_NAME}:openresty-${BASE_TAG}" "${ROOT_DIR}/openresty-build/Dockerfile" "${ROOT_DIR}/openresty-build"
+fi
 
 docker builder prune -a -f
