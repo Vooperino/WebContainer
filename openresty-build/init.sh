@@ -44,8 +44,6 @@ else
     fi
 fi
 
-generateSupervisorConfig
-
 if checkDir "/clean"; then
     if isEmptyDir $CLEAN_PATH; then
         output "Clean configuration was not found! Corrupt of incomplete docker build of this container! Exiting"
@@ -66,6 +64,11 @@ fi
 if isEmptyDir "/config"; then 
     output "Copying clean config data"
     cp -r -f -v $CLEAN_PATH/config/* /config    
+fi
+
+if isEmptyDir "/config/supervisord"; then 
+    output "Copying clean config data"
+    cp -r -f -v $CLEAN_PATH/config/supervisord/* /config/supervisord
 fi
 
 if ! checkDir "/config/php"; then
@@ -96,6 +99,13 @@ if isEmptyDir "/scripts"; then
 fi
 
 bash /scripts/pathChecker.sh
+
+if ! checkFile "/vl/supervisord/1_pack.conf"; then
+    output "Pack configuration file is missing! Copying default!"
+    cp -r -f -v /config/supervisord/1_pack.conf /vl/supervisord/1_pack.conf
+fi
+
+generateSupervisorConfig
 
 apt-get update
 if checkFile $AUTO_UPDATE; then
@@ -129,4 +139,4 @@ fi
 
 chmod 755 -R /scripts/*
 
-supervisord -c /vl/supervisord.conf
+supervisord -c /vl/supervisor.conf
