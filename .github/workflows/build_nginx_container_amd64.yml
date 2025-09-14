@@ -1,0 +1,17 @@
+name: Build Nginx Container
+on:
+  workflow_run:
+    workflows:
+      - "Build Core Container AMD64"
+    types:
+      - completed
+
+jobs:
+  build_nginx:
+    name: Build Nginx Container
+    uses: ./.github/workflows/build_container.yml
+    secrets: inherit
+    with:
+      image_name: 'vooplv/webcontainer'
+      image_tag: 'nginx'
+      type: 'nginx'

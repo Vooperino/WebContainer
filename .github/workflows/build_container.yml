@@ -1,0 +1,110 @@
+name: Build Container
+
+on:
+  workflow_call:
+    inputs:
+      image_name:
+        description: 'Name of the Docker image to build'
+        required: true
+        type: string
+      image_tag:
+        description: 'Tag for the Docker image'
+        required: true
+        type: string
+        default: 'dev'
+      type: 
+        description: 'Type of build (core, nginx, openresty)'
+        required: true
+        type: string
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4.2.2
+      - name: Validate Arguments
+        run: |
+          if [ -z "${{ inputs.image_name }}" ]; then
+            echo "::error title=Config Error::Image name is required"
+            exit 1
+          fi
+          if [ -z "${{ inputs.image_tag }}" ]; then
+            echo "::error title=Config Error::Image tag is required"
+            exit 1
+          fi
+          if [ -z "${{ inputs.type }}" ]; then
+            echo "::error title=Config Error::Build type is required"
+            exit 1
+          fi
+          if [[ "${{ inputs.type }}" != "core" && "${{ inputs.type }}" != "nginx" && "${{ inputs.type }}" != "openresty" ]]; then
+            echo "::error title=Config Error::Invalid build type. Must be 'core', 'nginx', or 'openresty'"
+            exit 1
+          fi
+
+          echo "Build type: ${{ inputs.type }}"
+          echo "Image name: ${{ inputs.image_name }}"
+          echo "Image tag: ${{ inputs.image_tag }}"
+      - name: Validate Dockerfile
+        run: |
+          if [ ! -f "${{ inputs.dockerfile_path }}/Dockerfile" ]; then
+            echo "Dockerfile not found at ${{ inputs.dockerfile_path }}"
+            exit 1
+          fi
+          echo "Dockerfile found at ${{ inputs.dockerfile_path }}"
+  build:
+    runs-on: ubuntu-latest
+    needs: validate
+    permissions:
+      contents: read
+      packages: write
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4.2.2
+      - name: Build Docker image
+        run: |
+          cd .build
+          chmod +x build-images.sh
+          BSH_ARG=""
+          if [ "${{ inputs.type }}" = "core" ]; then
+            BSH_ARG="--core-only"
+          fi
+          if [ "${{ inputs.type }}" = "nginx" ]; then
+            BSH_ARG="--nginx-only"
+          fi
+          if [ "${{ inputs.type }}" = "openresty" ]; then
+            BSH_ARG="--openresty-only"
+          fi
+
+          if [ ! -z "${{ inputs.image_tag }}" ]; then
+            export CI_TAG_OVERRIDE=${{ inputs.image_tag }}
+          fi
+
+          if [ ! -z "${{ inputs.image_name }}" ]; then
+            export CI_BASENAME_OVERRIDE=${{ inputs.image_name }}
+          fi
+
+          ./build-images.sh $BSH_ARG
+
+      - name: Log in to Docker Hub
+        uses: docker/login-action@v3.4.0
+        with:
+          username: ${{ secrets.DOCKER_HUB_USERNAME }}
+          password: ${{ secrets.DOCKER_HUB_PASSWORD }}
+      - name: Push Docker image to Docker Hub
+        run: docker push ${{ inputs.image_name }}:${{ inputs.type }}-${{ inputs.image_tag }}
+      - name: Log out from Docker Hub
+        run: docker logout
+      - name: Log in to GH Container Registry
+        uses: docker/login-action@v3.4.0
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+      - name: Tag and Push to GHCR
+        run: |
+          docker tag ${{ inputs.image_name }}:${{ inputs.type }}-${{ inputs.image_tag }} ghcr.io/${{ github.repository_owner }}/${{ inputs.image_name }}:${{ inputs.type }}-${{ inputs.image_tag }}
+          docker push ghcr.io/${{ github.repository_owner }}/${{ inputs.image_name }}:${{ inputs.type }}-${{ inputs.image_tag }}
+      - name: Log out from Docker GHCR
+        run: docker logout
+      

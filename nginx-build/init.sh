@@ -33,6 +33,21 @@ isEmptyDir() {
     [ -n "$(find "$@" -maxdepth 0 -type d -empty 2>/dev/null)" ]
 }
 
+if [[ -z "${BACKEND_RENEW_LESSL}" ]]; then
+    BACKEND_RENEW_LESSL=false
+else
+    if [[ "${BACKEND_RENEW_LESSL}" != "true" && "${BACKEND_RENEW_LESSL}" != "false" ]]; then
+        echo "[WARNING] BACKEND_RENEW_LESSL must be set to 'true' or 'false'. Defaulting to 'false'."
+        unset BACKEND_RENEW_LESSL
+        BACKEND_RENEW_LESSL=false
+        sleep 5
+    fi
+fi
+
+lazymount
+generateSupervisorConfig
+bash /scripts/pathChecker.sh
+
 if checkDir "/clean"; then
     if isEmptyDir $CLEAN_PATH; then
         output "Clean configuration was not found! Corrupt of incomplete docker build of this container! Exiting"
@@ -76,35 +91,12 @@ if isEmptyDir "/scripts"; then
     cp -r -f -v $CLEAN_PATH/scripts/* /scripts
 fi
 
-bash /scripts/pathChecker.sh
-
 apt-get update
 if checkFile $AUTO_UPDATE; then
     apt-get full-upgrade -y
 fi
 
-#Copy Nginx Stuff
-
-rm -rf $php_root/*
-
-cp -r -f $nginx_custom/* $nginx_root
-cp -r -f $php_custom/* $php_root
-
-service nginx start
-service php7.4-fpm start
-service php8.0-fpm start
-service php8.1-fpm start
-service php8.2-fpm start
-service php8.3-fpm start
-service cron start
-
-if checkFile $crontab_file; then
-    crontab -u root $crontab_file
-fi
-
 if ! checkFile $NEWINSTALL; then
-    #echo "New install detected! Tossing a fresh default nginx config!"
-    #cp -r -f -v /clean/config/defaults/default.conf /web/config/nginx/sites-enabled/
     rm -rf $NEWINSTALL
 fi
 
@@ -115,6 +107,9 @@ if ! checkFile $AUTORUN_PATH; then
 fi
 
 chmod 755 -R /scripts/*
+chmod -R 777 /var/log
+chmod -R 777 /run/php
+chmod -R 755 /usr/local/openresty
+chown -R www-data:www-data /usr/local/openresty
 
-bash $AUTORUN_PATH
-bash
+supervisord -c /vl/supervisord.conf

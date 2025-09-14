@@ -1,5 +1,5 @@
-LUA_VER="5.4.6"
-LUAROCK_VER="3.11.0"
+LUA_VER="5.4.8"
+LUAROCK_VER="3.12.2"
 CURRECT_DIR=$(pwd)
 
 apt-get update
@@ -43,18 +43,16 @@ apt-get -y install openresty
 
 echo "Configuring Clean Install and Default Configuration!"
 
+echo "Copying Supervisor 1_pack.conf"
+cp -r -f -v /temp_config/supervisord/1_pack.conf /vl/supervisord/1_pack.conf
+rm -rf /temp_config/supervisord/1_pack.conf
+
 echo "Updating Clean Install Dir"
 cp -r -f -v /temp_config/* /clean/config
 cp -r -f -v /temp_scripts/* /clean/scripts
 
 echo "Updating Config Dir"
-cp -r -f -v /temp_config/* /config/
-cp -r -f -v /temp_scripts/* /scripts
-
-cp -r -f -v /scripts/reloadWebSrv.sh /usr/bin/reloadWebSrv
-cp -r -f -v /scripts/reloadCustomLua.sh /usr/bin/reloadCustomLua
-chmod 555 -R /usr/bin/reloadWebSrv
-chmod 555 -R /usr/bin/reloadCustomLua
+cp -r -f -v /temp_config/* /config
 
 echo "Updating Default page"
 mkdir /usr/local/openresty/nginx/html

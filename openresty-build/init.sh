@@ -1,10 +1,7 @@
 #!/usr/bin/env bash
 
 openresty_root="/usr/local/openresty/nginx/conf"
-openresty_custom="/config/openresty"
-
 php_root="/etc/php"
-php_custom="/config/php"
 
 crontab_file="/config/cronTasks"
 
@@ -33,6 +30,17 @@ isEmptyDir() {
     [ -n "$(find "$@" -maxdepth 0 -type d -empty 2>/dev/null)" ]
 }
 
+if [[ -z "${BACKEND_RENEW_LESSL}" ]]; then
+    BACKEND_RENEW_LESSL=false
+else
+    if [[ "${BACKEND_RENEW_LESSL}" != "true" && "${BACKEND_RENEW_LESSL}" != "false" ]]; then
+        echo "[WARNING] BACKEND_RENEW_LESSL must be set to 'true' or 'false'. Defaulting to 'false'."
+        unset BACKEND_RENEW_LESSL
+        BACKEND_RENEW_LESSL=false
+        sleep 5
+    fi
+fi
+
 if checkDir "/clean"; then
     if isEmptyDir $CLEAN_PATH; then
         output "Clean configuration was not found! Corrupt of incomplete docker build of this container! Exiting"
@@ -57,13 +65,13 @@ fi
 
 if ! checkDir "/config/php"; then
     output "Failed to validate php config directory. Copying defaults"
-    mkdir -p $php_custom
-    cp -r -f -v $CLEAN_PATH/config/php/* $php_custom
+    mkdir -p /config/php
+    cp -r -f -v $CLEAN_PATH/config/php/* /config/php
 fi
 
 if isEmptyDir "/config/php"; then
     output "Failed to validate php config directory. Copying defaults"
-    cp -r -f -v $CLEAN_PATH/config/php/* $php_custom
+    cp -r -f -v $CLEAN_PATH/config/php/* /config/php
 fi
 
 if ! checkDir "/config/openresty"; then
@@ -82,6 +90,9 @@ if isEmptyDir "/scripts"; then
     cp -r -f -v $CLEAN_PATH/scripts/* /scripts
 fi
 
+
+lazymount
+generateSupervisorConfig
 bash /scripts/pathChecker.sh
 
 apt-get update
@@ -89,31 +100,7 @@ if checkFile $AUTO_UPDATE; then
     apt-get full-upgrade -y
 fi
 
-#Copy Openresty Stuff
-
-rm -rf $openresty_root/*
-rm -rf $php_root/*
-cp -r -f $openresty_custom/* $openresty_root
-cp -r -f $php_custom/* $php_root
-
-reloadCustomLua
-
-sysctl start openresty
-
-service php7.4-fpm start
-service php8.0-fpm start
-service php8.1-fpm start
-service php8.2-fpm start
-service php8.3-fpm start
-service cron start
-
-if checkFile $crontab_file; then
-    crontab -u root $crontab_file
-fi
-
 if ! checkFile $NEWINSTALL; then
-    #echo "New install detected! Tossing a fresh default openresty config!"
-    #cp -r -f -v /clean/config/defaults/default.conf /web/config/openresty/sites-enabled/
     rm -rf $NEWINSTALL
 fi
 
@@ -124,8 +111,9 @@ if ! checkFile $AUTORUN_PATH; then
 fi
 
 chmod 755 -R /scripts/*
+chmod -R 777 /var/log
+chmod -R 777 /run/php
+chmod -R 755 /usr/local/openresty
+chown -R www-data:www-data /usr/local/openresty
 
-bash $AUTORUN_PATH
-bash
-
-#
+supervisord -c /vl/supervisor.conf
