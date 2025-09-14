@@ -1,4 +1,4 @@
-FROM vooplv/webcontainer:core
+FROM vooplv/webcontainer:core-dev
 ENV DEBIAN_FRONTEND noninteractive
 MAINTAINER voop@voop.lv
 
