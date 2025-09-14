@@ -60,7 +60,7 @@ while [[ $# -gt 0 ]]; do
         --restart)
             if [ "$SERVICE_STATUS" = "RUNNING" ]; then
                 echo "[INFO] Restarting web server..."
-                 supervisorctl stop ${SERVICE}
+                supervisorctl stop ${SERVICE}
                 if [ $? -ne 0 ]; then
                     echo "[ERROR] Failed to stop web server."
                     exit 1
