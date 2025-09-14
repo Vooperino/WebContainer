@@ -26,9 +26,6 @@ cp -r -f -v $CONFIG_PATH/* $CLEAN_PATH/config
 mkdir $CLEAN_PATH/config/php
 cp -r -f -v $PHP_ROOT/* $CLEAN_PATH/config/php
 permissionFixPHP "8.3"
-permissionFixPHP "8.2"
-permissionFixPHP "8.1"
-permissionFixPHP "8.0"
 permissionFixPHP "7.4"
 
 output "Applying script directory permission!"
