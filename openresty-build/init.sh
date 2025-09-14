@@ -101,12 +101,6 @@ fi
 
 lazyamount
 
-reloadCustomLua
-
-if checkFile $crontab_file; then
-    crontab -u root $crontab_file
-fi
-
 if ! checkFile $NEWINSTALL; then
     #echo "New install detected! Tossing a fresh default openresty config!"
     #cp -r -f -v /clean/config/defaults/default.conf /web/config/openresty/sites-enabled/
