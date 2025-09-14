@@ -12,6 +12,25 @@ function get_arch() {
     esac
 }
 
+function createCMD() {
+    local script_name="$1"
+    if [ -z "$script_name" ]; then
+        echo "[ERROR] No script name provided to createCMD function."
+        exit 1
+    fi
+    if [ ! -f "/scripts/$script_name.sh" ]; then
+        echo "[ERROR] Script /scripts/$script_name.sh does not exist."
+        exit 1
+    fi
+    cp -r -f -v "/scripts/$script_name.sh" "/usr/bin/$script_name"
+    chmod 555 "/usr/bin/$script_name"
+    if [ $? -ne 0 ]; then
+        echo "[ERROR] Failed to create command for $script_name."
+        exit 1
+    fi
+    echo "[INFO] Command $script_name created successfully."
+}
+
 if [[ ! -d "/vl" ]]; then
     echo "[ERROR] This script must be run from the /vl directory. (BUILD ISSUE/FAULT)"
     exit 1
@@ -36,23 +55,16 @@ mkdir -p /var/run/supervisord
 curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
 
 echo "[INFO] Creating new commands to use"
-cp -r -f -v /scripts/reloadCron.sh /usr/bin/reloadCron
-cp -r -f -v /scripts/reloadPHP.sh /usr/bin/reloadPHP
-cp -r -f -v /scripts/letsencrypt/renewAllCert.sh /usr/bin/renewAllLECert
-cp -r -f -v /scripts/letsencrypt/createLetsEncryptCert.sh /usr/bin/createLECert
-cp -r -f -v /intcmd/generateSupervisorConfig.sh /usr/bin/generateSupervisorConfig
-cp -r -f -v /intcmd/applypermissions.sh /usr/bin/applypermissions
-cp -r -f -v /intcmd/lazyamount.sh /usr/bin/lazyamount
-cp -r -f -v /intcmd/websrv.sh /usr/bin/websrv
 
-chmod 555 -R /usr/bin/reloadCron
-chmod 555 -R /usr/bin/reloadPHP
-chmod 555 -R /usr/bin/renewAllLECert
-chmod 555 -R /usr/bin/createLECert
-chmod 555 -R /usr/bin/generateSupervisorConfig
-chmod 555 -R /usr/bin/applypermissions
-chmod 555 -R /usr/bin/lazyamount
-chmod 555 -R /usr/bin/websrv
+createCMD "reloadCron"
+createCMD "reloadPHP"
+createCMD "renewAllLECert"
+createCMD "createLECert"
+createCMD "generateSupervisorConfig"
+createCMD "applypermissions"
+createCMD "lazyamount"
+createCMD "websrv"
+createCMD "reloadPHPfpm"
 
 rm -rf /intcmd
 
