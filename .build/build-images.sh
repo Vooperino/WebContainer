@@ -73,6 +73,8 @@ function build_image() {
         is_core=true
     fi
 
+    echo "is_core: ${is_core} ($4)"
+
     local build_args=""
     if [[ "${is_core}" = false ]]; then
         echo "[INFO] IsCore is false!"
@@ -102,7 +104,7 @@ if [[ "$S_SET_ALL" = true ]] || [[ "$S_SET_NGINX_ONLY" = true ]]; then
 fi
 
 if [[ "$S_SET_ALL" = true ]] || [[ "$S_SET_OPENRESTY_ONLY" = true ]]; then
-    echo "Building OpenResty Image..."
+    echo "Building Openresty Image..."
     docker rmi -f "${BASE_IMAGE_NAME}:openresty-${BASE_TAG}" || true
     build_image "${BASE_IMAGE_NAME}:openresty-${BASE_TAG}" "${ROOT_DIR}/openresty-build/Dockerfile" "${ROOT_DIR}/openresty-build" false
 fi
