@@ -45,6 +45,8 @@ cp -r -f -v /scripts/letsencrypt/renewAllCert.sh /usr/bin/renewAllLECert
 cp -r -f -v /scripts/letsencrypt/createLetsEncryptCert.sh /usr/bin/createLECert
 cp -r -f -v /intcmd/generateSupervisorConfig.sh /usr/bin/generateSupervisorConfig
 cp -r -f -v /intcmd/applypermissions.sh /usr/bin/applypermissions
+cp -r -f -v /intcmd/lazyamount.sh /usr/bin/lazyamount
+cp -r -f -v /intcmd/websrv.sh /usr/bin/websrv
 
 chmod 555 -R /usr/bin/reloadCron
 chmod 555 -R /usr/bin/reloadPHP
@@ -52,8 +54,12 @@ chmod 555 -R /usr/bin/renewAllLECert
 chmod 555 -R /usr/bin/createLECert
 chmod 555 -R /usr/bin/generateSupervisorConfig
 chmod 555 -R /usr/bin/applypermissions
+chmod 555 -R /usr/bin/lazyamount
+chmod 555 -R /usr/bin/websrv
 
 rm -rf /intcmd
+
+chmod -R 777 /var/log
 
 echo "[INFO] Installing supercronic"
 ARCH=$(get_arch)
