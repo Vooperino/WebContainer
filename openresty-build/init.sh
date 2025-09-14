@@ -1,10 +1,7 @@
 #!/usr/bin/env bash
 
 openresty_root="/usr/local/openresty/nginx/conf"
-openresty_custom="/config/openresty"
-
 php_root="/etc/php"
-php_custom="/config/php"
 
 crontab_file="/config/cronTasks"
 
@@ -113,11 +110,10 @@ if checkFile $AUTO_UPDATE; then
 fi
 
 #Copy Openresty Stuff
-
 rm -rf $openresty_root/*
 rm -rf $php_root/*
-cp -r -f $openresty_custom/* $openresty_root
-cp -r -f $php_custom/* $php_root
+
+lazyamount
 
 reloadCustomLua
 
