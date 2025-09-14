@@ -1,4 +1,4 @@
-name: Build Openresty Container
+name: Build Openresty Container AMD64
 on:
   workflow_run:
     workflows:
