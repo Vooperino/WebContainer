@@ -16,6 +16,7 @@ jobs:
       image_name: 'webcontainer'
       image_tag: 'dev'
       type: 'core'
+      runner: ${{ vars.RUNNER }}
 
   build_nginx_amd64:
     name: Build Nginx Container AMD64
@@ -26,6 +27,7 @@ jobs:
       image_name: 'webcontainer'
       image_tag: 'dev'
       type: 'nginx'
+      runner: ${{ vars.RUNNER }}
 
   build_openresty_amd64:
     name: Build Openresty Container AMD64
@@ -36,3 +38,5 @@ jobs:
       image_name: 'webcontainer'
       image_tag: 'dev'
       type: 'openresty'
+      runner: ${{ vars.RUNNER }}
+      

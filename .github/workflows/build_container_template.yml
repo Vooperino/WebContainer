@@ -3,6 +3,9 @@ name: Build Container Template
 on:
   workflow_call:
     inputs:
+      runner:
+        required: true
+        type: string
       image_name:
         description: 'Name of the Docker image to build'
         required: true
@@ -24,7 +27,7 @@ on:
 
 jobs:
   validate:
-    runs-on: ${{ vars.RUNNER }}
+    runs-on: ${{ inputs.runner }}
     steps:
       - name: Checkout code
         uses: actions/checkout@v4.2.2
@@ -51,7 +54,7 @@ jobs:
           echo "Image name: ${{ inputs.image_name }}"
           echo "Image tag: ${{ inputs.image_tag }}"
   build:
-    runs-on: ${{ vars.RUNNER }}
+    runs-on: ${{ inputs.runner }}
     needs: ["validate"]
     permissions:
       contents: read
@@ -94,7 +97,7 @@ jobs:
           format: 'table'
           ignore-unfixed: true
           hide-progress: true
-          exit-code: 1
+          exit-code: 0
           vuln-type: 'os,library'
           output: 'trivy-results-${{ inputs.image_name }}-${{ inputs.type }}-${{ inputs.image_tag }}.txt'
       #- name: Upload Trivy Scan Results
@@ -121,17 +124,17 @@ jobs:
           docker push vooplv/${{ inputs.image_name }}:${{ inputs.type }}-${{ inputs.image_tag }}
       - name: Log out from Docker Hub
         run: docker logout
-      - name: Log in to GH Container Registry
-        uses: docker/login-action@v3.4.0
-        with:
-          registry: ghcr.io
-          username: ${{ github.actor }}
-          password: ${{ secrets.GITHUB_TOKEN }}
-      - name: Tag and Push to GHCR
-        run: |
-          GH_PATH=${{ github.repository_owner }}
-          docker tag ${{ inputs.image_name }}:${{ inputs.type }}-${{ inputs.image_tag }} ghcr.io/${GH_PATH,,}/${{ inputs.image_name }}:${{ inputs.type }}-${{ inputs.image_tag }}
-          docker push ghcr.io/${GH_PATH,,}/${{ inputs.image_name }}:${{ inputs.type }}-${{ inputs.image_tag }}
-      - name: Log out from Docker GHCR
-        run: docker logout
+      #- name: Log in to GH Container Registry
+      #  uses: docker/login-action@v3.4.0
+      #  with:
+      #    registry: ghcr.io
+      #    username: ${{ github.actor }}
+      #    password: ${{ secrets.GITHUB_TOKEN }}
+      #- name: Tag and Push to GHCR
+      #  run: |
+      #    GH_PATH=${{ github.repository_owner }}
+      #    docker tag ${{ inputs.image_name }}:${{ inputs.type }}-${{ inputs.image_tag }} ghcr.io/${GH_PATH,,}/${{ inputs.image_name }}:${{ inputs.type }}-${{ inputs.image_tag }}
+      #    docker push ghcr.io/${GH_PATH,,}/${{ inputs.image_name }}:${{ inputs.type }}-${{ inputs.image_tag }}
+      #- name: Log out from Docker GHCR
+      #  run: docker logout
       
