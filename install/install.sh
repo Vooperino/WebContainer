@@ -68,6 +68,8 @@ createCMD "lazyamount" "/intcmd"
 createCMD "websrv" "/intcmd"
 createCMD "reloadPHPfpm" "/intcmd"
 
+createCMD "background_le_ssl_renew" "/intcmd/background"
+
 createCMD "renewLEAllCert" "/intcmd/letsencrypt"
 createCMD "createLECert" "/intcmd/letsencrypt"
 
