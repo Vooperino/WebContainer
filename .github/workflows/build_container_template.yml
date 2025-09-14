@@ -1,4 +1,4 @@
-name: Build Container
+name: Build Container Template
 
 on:
   workflow_call:
@@ -87,19 +87,18 @@ jobs:
 
           ./build-images.sh $BSH_ARG
       - name: Run Trivy vulnerability scanner
-        uses: aquasecurity/trivy-action@master
+        uses: aquasecurity/trivy-action@v0.33.1
         with:
+          scan-type: 'image'
           image-ref: '${{ inputs.image_name }}:${{ inputs.type }}-${{ inputs.image_tag }}'
           format: 'table'
-          severity: 'CRITICAL,HIGH'
           ignore-unfixed: true
-          exit-code: '1'
+          hide-progress: true
+          exit-code: 1
           vuln-type: 'os,library'
           output: 'trivy-results-${{ inputs.image_name }}-${{ inputs.type }}-${{ inputs.image_tag }}.txt'
-          scan-type: 'image'
-          fail-on: 'vuln'
       - name: Upload Trivy Scan Results
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4.6.2
         if: always()
         with:
           name: trivy-results-${{ inputs.image_name }}-${{ inputs.type }}-${{ inputs.image_tag }}
