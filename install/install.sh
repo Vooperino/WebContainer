@@ -60,6 +60,7 @@ chmod 555 -R /usr/bin/websrv
 rm -rf /intcmd
 
 chmod -R 777 /var/log
+chmod -R 777 /run/php
 
 echo "[INFO] Installing supercronic"
 ARCH=$(get_arch)

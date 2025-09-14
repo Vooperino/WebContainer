@@ -65,13 +65,13 @@ fi
 
 if ! checkDir "/config/php"; then
     output "Failed to validate php config directory. Copying defaults"
-    mkdir -p $php_custom
-    cp -r -f -v $CLEAN_PATH/config/php/* $php_custom
+    mkdir -p /config/php
+    cp -r -f -v $CLEAN_PATH/config/php/* /config/php
 fi
 
 if isEmptyDir "/config/php"; then
     output "Failed to validate php config directory. Copying defaults"
-    cp -r -f -v $CLEAN_PATH/config/php/* $php_custom
+    cp -r -f -v $CLEAN_PATH/config/php/* /config/php
 fi
 
 if ! checkDir "/config/openresty"; then
@@ -99,10 +99,6 @@ if checkFile $AUTO_UPDATE; then
     apt-get full-upgrade -y
 fi
 
-#Copy Openresty Stuff
-rm -rf $openresty_root/*
-rm -rf $php_root/*
-
 lazyamount
 
 reloadCustomLua
@@ -126,5 +122,7 @@ fi
 chmod 755 -R /scripts/*
 chmod -R 777 /var/log
 chmod -R 777 /run/php
+chmod -R 755 /usr/local/openresty
+chown -R www-data:www-data /usr/local/openresty
 
 supervisord -c /vl/supervisor.conf
