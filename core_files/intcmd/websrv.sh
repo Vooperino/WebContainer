@@ -18,6 +18,8 @@ fi
 SERVICE="webserver"
 SERVICE_STATUS=$(supervisorctl status "${SERVICE}" | awk '{print $2}')
 
+echo "Current status of ${SERVICE}: ${SERVICE_STATUS}"
+
 while [[ $# -gt 0 ]]; do
     key="$1"
     case $key in
@@ -26,7 +28,7 @@ while [[ $# -gt 0 ]]; do
             exit 0
             ;;
         --stop)
-            if [ "$STATUS" = "RUNNING" ]; then
+            if [ "$SERVICE_STATUS" = "RUNNING" ]; then
                 echo "[INFO] Stopping web server..."
                 supervisorctl stop ${SERVICE}
                 if [ $? -ne 0 ]; then
@@ -41,7 +43,7 @@ while [[ $# -gt 0 ]]; do
             fi
             ;;
         --start)
-            if [ "$STATUS" = "RUNNING" ]; then
+            if [ "$SERVICE_STATUS" = "RUNNING" ]; then
                 echo "[ERROR] Web server is already running."
                 exit 1
             else
@@ -56,7 +58,7 @@ while [[ $# -gt 0 ]]; do
             fi
             ;;
         --restart)
-            if [ "$STATUS" = "RUNNING" ]; then
+            if [ "$SERVICE_STATUS" = "RUNNING" ]; then
                 echo "[INFO] Restarting web server..."
                  supervisorctl stop ${SERVICE}
                 if [ $? -ne 0 ]; then
