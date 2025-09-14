@@ -57,6 +57,12 @@ if [ ! -z "${CI_TAG_OVERRIDE}" ]; then
     echo "[CI] (INFO) CI_TAG_OVERRIDE is set, using tag: ${BASE_TAG}"
 fi
 
+if [ ! -z "${CI_BASENAME_OVERRIDE}" ]; then
+    unset BASE_IMAGE_NAME
+    BASE_IMAGE_NAME=${CI_BASENAME_OVERRIDE:-vooplv/webcontainer}
+    echo "[CI] (INFO) CI_BASENAME_OVERRIDE is set, using name: ${BASE_IMAGE_NAME}"
+fi
+
 
 function build_image() {
     local image_name=$1
