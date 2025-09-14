@@ -13,5 +13,5 @@ jobs:
     secrets: inherit
     with:
       image_name: 'vooplv/webcontainer'
-      image_tag: 'openresty'
+      image_tag: 'dev'
       type: 'openresty'
