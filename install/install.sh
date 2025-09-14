@@ -62,13 +62,14 @@ curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin
 echo "[INFO] Creating new commands to use"
 
 createCMD "reloadCron" "/intcmd"
-createCMD "renewAllLECert" "/intcmd/letsencrypt"
-createCMD "createLECert" "/intcmd/letsencrypt"
 createCMD "generateSupervisorConfig" "/intcmd"
 createCMD "applypermissions" "/intcmd"
 createCMD "lazyamount" "/intcmd"
 createCMD "websrv" "/intcmd"
 createCMD "reloadPHPfpm" "/intcmd"
+
+createCMD "renewLEAllCert" "/intcmd/letsencrypt"
+createCMD "createLECert" "/intcmd/letsencrypt"
 
 rm -rf /intcmd
 
