@@ -91,7 +91,7 @@ if isEmptyDir "/scripts"; then
 fi
 
 
-lazyamount
+lazymount
 generateSupervisorConfig
 bash /scripts/pathChecker.sh
 

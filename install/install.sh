@@ -64,7 +64,7 @@ echo "[INFO] Creating new commands to use"
 createCMD "reloadCron" "/intcmd"
 createCMD "generateSupervisorConfig" "/intcmd"
 createCMD "applypermissions" "/intcmd"
-createCMD "lazyamount" "/intcmd"
+createCMD "lazymount" "/intcmd"
 createCMD "websrv" "/intcmd"
 createCMD "reloadPHPfpm" "/intcmd"
 

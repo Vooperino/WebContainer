@@ -44,7 +44,7 @@ else
     fi
 fi
 
-lazyamount
+lazymount
 generateSupervisorConfig
 bash /scripts/pathChecker.sh
 

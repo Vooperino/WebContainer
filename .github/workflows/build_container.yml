@@ -23,7 +23,7 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v4.2.2
-      - name: Validate Arguemnts
+      - name: Validate Arguments
         run: |
           if [ -z "${{ inputs.image_name }}" ]; then
             echo "::error title=Config Error::Image name is required"

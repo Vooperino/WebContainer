@@ -30,7 +30,7 @@ for to_path in "${!MOUNTS[@]}"; do
   from_path="${MOUNTS[${to_path}]}"
   rm -rf "${to_path}"
   if [ ! -d "$from_path" ]; then
-    echo "[INFO] Creating Direcotory '$from_path' and applying permissions"
+    echo "[INFO] Creating Directory '$from_path' and applying permissions"
     mkdir -vp "$from_path"
   fi
   chmod -R 777 "$from_path"

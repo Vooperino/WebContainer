@@ -26,7 +26,7 @@ function validatePaths() {
 
 function renewCertificates() {
     echo "[INFO] Starting certificate renewal process..."
-    local WEBROOT_OPTS="--webroot --webroot-path $certStuffRoot"
+    local WEBROOT_OPTS="--webroot --webroot-path $CERT_WEBROOT"
     if [[ -f "$CLOUDFLARE_ACCOUNT_FILE" ]]; then
         WEBROOT_OPTS+=" --dns-cloudflare --dns-cloudflare-credentials $CLOUDFLARE_ACCOUNT_FILE"
     fi
