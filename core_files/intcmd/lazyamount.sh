@@ -21,6 +21,7 @@ MOUNTS["/etc/php"]="/config/php"
 
 for to_path in "${!MOUNTS[@]}"; do
   set -Eeuo pipefail
+  echo "From Path: ${MOUNTS[${to_path}]} To Path: ${to_path}"
   from_path="${MOUNTS[${to_path}]}"
   rm -rf "${to_path}"
   if [ ! -d "$from_path" ]; then
