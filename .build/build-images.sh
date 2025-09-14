@@ -51,6 +51,12 @@ while [[ $# -gt 0 ]]; do
     shift
 done
 
+if [ ! -z "${CI_TAG_OVERRIDE}" ]; then
+    unset BASE_TAG
+    BASE_TAG=${CI_COMMIT_TAG:-dev}
+    echo "[CI] (INFO) CI_TAG_OVERRIDE is set, using tag: ${BASE_TAG}"
+fi
+
 
 function build_image() {
     local image_name=$1
