@@ -44,7 +44,9 @@ else
     fi
 fi
 
+lazyamount
 generateSupervisorConfig
+bash /scripts/pathChecker.sh
 
 if checkDir "/clean"; then
     if isEmptyDir $CLEAN_PATH; then
@@ -89,27 +91,12 @@ if isEmptyDir "/scripts"; then
     cp -r -f -v $CLEAN_PATH/scripts/* /scripts
 fi
 
-bash /scripts/pathChecker.sh
-
 apt-get update
 if checkFile $AUTO_UPDATE; then
     apt-get full-upgrade -y
 fi
 
-#Copy Nginx Stuff
-
-rm -rf $php_root/*
-
-cp -r -f $nginx_custom/* $nginx_root
-cp -r -f $php_custom/* $php_root
-
-if checkFile $crontab_file; then
-    crontab -u root $crontab_file
-fi
-
 if ! checkFile $NEWINSTALL; then
-    #echo "New install detected! Tossing a fresh default nginx config!"
-    #cp -r -f -v /clean/config/defaults/default.conf /web/config/nginx/sites-enabled/
     rm -rf $NEWINSTALL
 fi
 
@@ -120,5 +107,9 @@ if ! checkFile $AUTORUN_PATH; then
 fi
 
 chmod 755 -R /scripts/*
+chmod -R 777 /var/log
+chmod -R 777 /run/php
+chmod -R 755 /usr/local/openresty
+chown -R www-data:www-data /usr/local/openresty
 
 supervisord -c /vl/supervisord.conf

@@ -90,20 +90,17 @@ if isEmptyDir "/scripts"; then
     cp -r -f -v $CLEAN_PATH/scripts/* /scripts
 fi
 
-bash /scripts/pathChecker.sh
 
+lazyamount
 generateSupervisorConfig
+bash /scripts/pathChecker.sh
 
 apt-get update
 if checkFile $AUTO_UPDATE; then
     apt-get full-upgrade -y
 fi
 
-lazyamount
-
 if ! checkFile $NEWINSTALL; then
-    #echo "New install detected! Tossing a fresh default openresty config!"
-    #cp -r -f -v /clean/config/defaults/default.conf /web/config/openresty/sites-enabled/
     rm -rf $NEWINSTALL
 fi
 
