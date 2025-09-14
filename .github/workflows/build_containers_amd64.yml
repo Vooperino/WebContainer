@@ -1,5 +1,5 @@
 name: Build_Containers
-run-name: Build Containers
+run-name: Build Containers AMD64
 
 on:
   workflow_dispatch: {}
@@ -9,7 +9,7 @@ on:
 
 jobs:
   build_core_amd64:
-    name: Build Core Container
+    name: Build Core Container AMD64
     uses: ./.github/workflows/build_container_template.yml
     secrets: inherit
     with:
