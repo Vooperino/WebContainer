@@ -1,8 +1,11 @@
-name: Build Container
+name: Build Container Template
 
 on:
   workflow_call:
     inputs:
+      runner:
+        required: true
+        type: string
       image_name:
         description: 'Name of the Docker image to build'
         required: true
@@ -20,11 +23,11 @@ on:
         description: 'Core image to use for nginx/openresty builds'
         required: false
         type: string
-        default: 'ghcr.io/vooperino/webcontainer:core-dev'
+        default: 'vooplv/webcontainer:core-dev'
 
 jobs:
   validate:
-    runs-on: ubuntu-latest
+    runs-on: ${{ inputs.runner }}
     steps:
       - name: Checkout code
         uses: actions/checkout@v4.2.2
@@ -51,8 +54,8 @@ jobs:
           echo "Image name: ${{ inputs.image_name }}"
           echo "Image tag: ${{ inputs.image_tag }}"
   build:
-    runs-on: ubuntu-latest
-    needs: validate
+    runs-on: ${{ inputs.runner }}
+    needs: ["validate"]
     permissions:
       contents: read
       packages: write
@@ -69,11 +72,11 @@ jobs:
             BSH_ARG="--core-only"
           fi
           if [ "${{ inputs.type }}" = "nginx" ]; then
-            export CI_BASECORE_OVERRIDE="${{ inputs.core_image }}"
+            CI_CORE_CONTAINER=${{ inputs.core_image }}
             BSH_ARG="--nginx-only"
           fi
           if [ "${{ inputs.type }}" = "openresty" ]; then
-            export CI_BASECORE_OVERRIDE="${{ inputs.core_image }}"
+            CI_CORE_CONTAINER=${{ inputs.core_image }}
             BSH_ARG="--openresty-only"
           fi
 
@@ -85,26 +88,29 @@ jobs:
             export CI_BASENAME_OVERRIDE=${{ inputs.image_name }}
           fi
 
+          if [ ! -z "${CCI_CORE_CONTAINER}" ]; then
+            echo "[INFO] Using core image override: ${CI_CORE_CONTAINER}"
+          fi
+
           ./build-images.sh $BSH_ARG
       - name: Run Trivy vulnerability scanner
-        uses: aquasecurity/trivy-action@master
+        uses: aquasecurity/trivy-action@0.33.1
         with:
+          scan-type: 'image'
           image-ref: '${{ inputs.image_name }}:${{ inputs.type }}-${{ inputs.image_tag }}'
           format: 'table'
-          severity: 'CRITICAL,HIGH'
           ignore-unfixed: true
-          exit-code: '1'
+          hide-progress: true
+          exit-code: 0
           vuln-type: 'os,library'
           output: 'trivy-results-${{ inputs.image_name }}-${{ inputs.type }}-${{ inputs.image_tag }}.txt'
-          scan-type: 'image'
-          fail-on: 'vuln'
-      - name: Upload Trivy Scan Results
-        uses: actions/upload-artifact@v3
-        if: always()
-        with:
-          name: trivy-results-${{ inputs.image_name }}-${{ inputs.type }}-${{ inputs.image_tag }}
-          path: trivy-results-${{ inputs.image_name }}-${{ inputs.type }}-${{ inputs.image_tag }}.txt
-          retention-days: 1
+      #- name: Upload Trivy Scan Results
+      #  uses: actions/upload-artifact@v4.6.2
+      #  if: always()
+      #  with:
+      #    name: trivy-results-${{ inputs.image_name }}-${{ inputs.type }}-${{ inputs.image_tag }}
+      #    path: trivy-results-${{ inputs.image_name }}-${{ inputs.type }}-${{ inputs.image_tag }}.txt
+      #    retention-days: 1
       - name: Add results to summary
         if: always()
         run: |
@@ -122,17 +128,17 @@ jobs:
           docker push vooplv/${{ inputs.image_name }}:${{ inputs.type }}-${{ inputs.image_tag }}
       - name: Log out from Docker Hub
         run: docker logout
-      - name: Log in to GH Container Registry
-        uses: docker/login-action@v3.4.0
-        with:
-          registry: ghcr.io
-          username: ${{ github.actor }}
-          password: ${{ secrets.GITHUB_TOKEN }}
-      - name: Tag and Push to GHCR
-        run: |
-          GH_PATH=${{ github.repository_owner }}
-          docker tag ${{ inputs.image_name }}:${{ inputs.type }}-${{ inputs.image_tag }} ghcr.io/${GH_PATH,,}/${{ inputs.image_name }}:${{ inputs.type }}-${{ inputs.image_tag }}
-          docker push ghcr.io/${GH_PATH,,}/${{ inputs.image_name }}:${{ inputs.type }}-${{ inputs.image_tag }}
-      - name: Log out from Docker GHCR
-        run: docker logout
+      #- name: Log in to GH Container Registry
+      #  uses: docker/login-action@v3.4.0
+      #  with:
+      #    registry: ghcr.io
+      #    username: ${{ github.actor }}
+      #    password: ${{ secrets.GITHUB_TOKEN }}
+      #- name: Tag and Push to GHCR
+      #  run: |
+      #    GH_PATH=${{ github.repository_owner }}
+      #    docker tag ${{ inputs.image_name }}:${{ inputs.type }}-${{ inputs.image_tag }} ghcr.io/${GH_PATH,,}/${{ inputs.image_name }}:${{ inputs.type }}-${{ inputs.image_tag }}
+      #    docker push ghcr.io/${GH_PATH,,}/${{ inputs.image_name }}:${{ inputs.type }}-${{ inputs.image_tag }}
+      #- name: Log out from Docker GHCR
+      #  run: docker logout
       

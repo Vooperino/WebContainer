@@ -1,5 +1,6 @@
-ARG BASE_IMAGE=ghcr.io/vooperino/webcontainer:core-dev
-FROM ${BASE_IMAGE}
+ARG BASE_IMAGE=vooplv/webcontainer:core-dev
+#FROM ${BASE_IMAGE}
+FROM vooplv/webcontainer:core-dev
 
 ENV DEBIAN_FRONTEND=noninteractive
 

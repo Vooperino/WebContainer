@@ -3,6 +3,7 @@
 SCRIPT_DIR=$(cd $(dirname $0); pwd)
 ROOT_DIR=$(cd ${SCRIPT_DIR}/..; pwd)
 
+BASE_CORE_IMAGE=""
 BASE_IMAGE_NAME="webcontainer"
 BASE_TAG="dev"
 
@@ -63,6 +64,12 @@ if [ ! -z "${CI_BASENAME_OVERRIDE}" ]; then
     echo "[CI] (INFO) CI_BASENAME_OVERRIDE is set, using name: ${BASE_IMAGE_NAME}"
 fi
 
+if [ ! -z "${CI_CORE_CONTAINER}" ]; then
+    unset BASE_CORE_IMAGE
+    BASE_CORE_IMAGE=${CI_CORE_CONTAINER}
+    echo "[CI] (INFO) CI_CORE_CONTAINER is set, using core image: ${BASE_CORE_IMAGE}"
+fi
+
 function build_image() {
     local image_name=$1
     local dockerfile_path=$2
@@ -72,11 +79,17 @@ function build_image() {
     if [ -z "${is_core}" ]; then
         is_core=true
     fi
+
+    echo "is_core: ${is_core} ($4)"
+
     local build_args=""
-    if [ "${is_core}" = false ]; then
-        if [ ! -z "${CI_BASECORE_OVERRIDE}" ]; then
-            build_args="--build-arg BASE_IMAGE=${CI_BASECORE_OVERRIDE}:core-${BASE_TAG}"
+    if [[ "${is_core}" = false ]]; then
+        echo "[INFO] IsCore is false!"
+        if [ ! -z "${BASE_CORE_IMAGE}" ]; then
+            echo "[CI] (INFO) BASE_CORE_IMAGE is set, using core image: ${BASE_CORE_IMAGE}"
+            build_args="--build-arg BASE_IMAGE=${BASE_CORE_IMAGE}"
         else
+            echo "[INFO] Using default core image: ${BASE_IMAGE_NAME}:core-${BASE_TAG}"
             build_args="--build-arg BASE_IMAGE=${BASE_IMAGE_NAME}:core-${BASE_TAG}"
         fi
     fi
@@ -85,20 +98,20 @@ function build_image() {
     docker build ${build_args} -t ${image_name} -f ${dockerfile_path} ${context_path}
 }
 
-if [ "$S_SET_ALL" = true ] || [ "$S_SET_CORE_ONLY" = true ]; then
+if [[ "$S_SET_ALL" = true ]] || [[ "$S_SET_CORE_ONLY" = true ]]; then
     echo "Building Core Image..."
     docker rmi -f "${BASE_IMAGE_NAME}:core-${BASE_TAG}" || true
     build_image "${BASE_IMAGE_NAME}:core-${BASE_TAG}" "${ROOT_DIR}/Dockerfile" "${ROOT_DIR}" true
 fi
 
-if [ "$S_SET_ALL" = true ] || [ "$S_SET_NGINX_ONLY" = true ]; then
+if [[ "$S_SET_ALL" = true ]] || [[ "$S_SET_NGINX_ONLY" = true ]]; then
     echo "Building Nginx Image..."
     docker rmi -f "${BASE_IMAGE_NAME}:nginx-${BASE_TAG}" || true
     build_image "${BASE_IMAGE_NAME}:nginx-${BASE_TAG}" "${ROOT_DIR}/nginx-build/Dockerfile" "${ROOT_DIR}/nginx-build" false
 fi
 
-if [ "$S_SET_ALL" = true ] || [ "$S_SET_OPENRESTY_ONLY" = true ]; then
-    echo "Building OpenResty Image..."
+if [[ "$S_SET_ALL" = true ]] || [[ "$S_SET_OPENRESTY_ONLY" = true ]]; then
+    echo "Building Openresty Image..."
     docker rmi -f "${BASE_IMAGE_NAME}:openresty-${BASE_TAG}" || true
     build_image "${BASE_IMAGE_NAME}:openresty-${BASE_TAG}" "${ROOT_DIR}/openresty-build/Dockerfile" "${ROOT_DIR}/openresty-build" false
 fi
