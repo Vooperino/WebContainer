@@ -78,9 +78,9 @@ function build_image() {
     local build_args=""
     if [[ "${is_core}" = false ]]; then
         echo "[INFO] IsCore is false!"
-        if [ ! -z "${CI_BASECORE_OVERRIDE}" ]; then
-            echo "[CI] (INFO) CI_BASECORE_OVERRIDE is set, using core image: ${CI_BASECORE_OVERRIDE}"
-            build_args="--build-arg BASE_IMAGE=${CI_BASECORE_OVERRIDE}"
+        if [ ! -z "${CI_CORE_CONTAINER}" ]; then
+            echo "[CI] (INFO) CI_CORE_CONTAINER is set, using core image: ${CI_CORE_CONTAINER}"
+            build_args="--build-arg BASE_IMAGE=${CI_CORE_CONTAINER}"
         else
             echo "[INFO] Using default core image: ${BASE_IMAGE_NAME}:core-${BASE_TAG}"
             build_args="--build-arg BASE_IMAGE=${BASE_IMAGE_NAME}:core-${BASE_TAG}"

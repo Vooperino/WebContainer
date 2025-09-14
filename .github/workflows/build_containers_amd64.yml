@@ -28,6 +28,7 @@ jobs:
       image_tag: 'dev'
       type: 'nginx'
       runner: ${{ vars.RUNNER }}
+      core_image: 'vooplv/webcontainer:core-dev'
 
   build_openresty_amd64:
     name: Build Openresty Container AMD64
@@ -39,4 +40,5 @@ jobs:
       image_tag: 'dev'
       type: 'openresty'
       runner: ${{ vars.RUNNER }}
+      core_image: 'vooplv/webcontainer:core-dev'
       
