@@ -72,11 +72,11 @@ jobs:
             BSH_ARG="--core-only"
           fi
           if [ "${{ inputs.type }}" = "nginx" ]; then
-            export CI_BASECORE_OVERRIDE="${{ inputs.core_image }}"
+            CI_BASECORE_OVERRIDE=${{ inputs.core_image }}
             BSH_ARG="--nginx-only"
           fi
           if [ "${{ inputs.type }}" = "openresty" ]; then
-            export CI_BASECORE_OVERRIDE="${{ inputs.core_image }}"
+            CI_BASECORE_OVERRIDE=${{ inputs.core_image }}
             BSH_ARG="--openresty-only"
           fi
 
