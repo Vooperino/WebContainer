@@ -1,6 +1,5 @@
 FROM vooplv/webcontainer:core-dev
-ENV DEBIAN_FRONTEND noninteractive
-MAINTAINER voop@voop.lv
+ENV DEBIAN_FRONTEND=noninteractive
 
 EXPOSE 80
 EXPOSE 443
