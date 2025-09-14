@@ -47,6 +47,10 @@ echo "Updating Clean Install Dir"
 cp -r -f -v /temp_config/* /clean/config
 cp -r -f -v /temp_scripts/* /clean/scripts
 
+echo "Copying Supervisor 1_pack.conf"
+cp -r -f -v /clean/config/1_pack.conf /vl/supervisord/1_pack.conf
+rm -rf /clean/config/1_pack.conf
+
 echo "Updating Config Dir"
 cp -r -f -v /temp_config/* /config
 cp -r -f -v /temp_scripts/* /scripts
