@@ -1,4 +1,4 @@
-name: Build Nginx Container
+name: Build Nginx Container AMD64
 on:
   workflow_run:
     workflows:
