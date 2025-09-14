@@ -54,7 +54,7 @@ while true; do
     validatePaths
     renewCertificates
     echo "[INFO] Waiting for 12 hours before the next renewal check..."
-    sleep 43200  # Sleep for 12 hours (43200 seconds)
+    sleep 43200
 done
 
 echo "[INFO] Exiting background renewal script."
