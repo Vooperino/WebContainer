@@ -69,6 +69,7 @@ createCMD "websrv" "/intcmd"
 createCMD "reloadPHPfpm" "/intcmd"
 
 createCMD "background_le_ssl_renew" "/intcmd/background"
+createCMD "health_check" "/intcmd/background"
 
 createCMD "renewLEAllCert" "/intcmd/letsencrypt"
 createCMD "createLECert" "/intcmd/letsencrypt"
