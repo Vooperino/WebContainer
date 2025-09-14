@@ -3,6 +3,7 @@
 SCRIPT_DIR=$(cd $(dirname $0); pwd)
 ROOT_DIR=$(cd ${SCRIPT_DIR}/..; pwd)
 
+BASE_CORE_IMAGE=""
 BASE_IMAGE_NAME="webcontainer"
 BASE_TAG="dev"
 
@@ -63,6 +64,12 @@ if [ ! -z "${CI_BASENAME_OVERRIDE}" ]; then
     echo "[CI] (INFO) CI_BASENAME_OVERRIDE is set, using name: ${BASE_IMAGE_NAME}"
 fi
 
+if [ ! -z "${CI_CORE_CONTAINER}" ]; then
+    unset BASE_CORE_IMAGE
+    BASE_CORE_IMAGE=${CI_CORE_CONTAINER}
+    echo "[CI] (INFO) CI_CORE_CONTAINER is set, using core image: ${BASE_CORE_IMAGE}"
+fi
+
 function build_image() {
     local image_name=$1
     local dockerfile_path=$2
@@ -78,9 +85,9 @@ function build_image() {
     local build_args=""
     if [[ "${is_core}" = false ]]; then
         echo "[INFO] IsCore is false!"
-        if [ ! -z "${CI_CORE_CONTAINER}" ]; then
-            echo "[CI] (INFO) CI_CORE_CONTAINER is set, using core image: ${CI_CORE_CONTAINER}"
-            build_args="--build-arg BASE_IMAGE=${CI_CORE_CONTAINER}"
+        if [ ! -z "${BASE_CORE_IMAGE}" ]; then
+            echo "[CI] (INFO) BASE_CORE_IMAGE is set, using core image: ${BASE_CORE_IMAGE}"
+            build_args="--build-arg BASE_IMAGE=${BASE_CORE_IMAGE}"
         else
             echo "[INFO] Using default core image: ${BASE_IMAGE_NAME}:core-${BASE_TAG}"
             build_args="--build-arg BASE_IMAGE=${BASE_IMAGE_NAME}:core-${BASE_TAG}"
