@@ -14,5 +14,5 @@ jobs:
     with:
       image_name: 'vooplv/webcontainer'
       image_tag: 'core'
-      dockerfile_path: ${{ github.workspace }}
+      type: 'core'
 

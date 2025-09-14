@@ -14,4 +14,4 @@ jobs:
     with:
       image_name: 'vooplv/webcontainer'
       image_tag: 'nginx'
-      dockerfile_path: ${{ github.workspace }}/nginx-build
+      type: 'nginx'

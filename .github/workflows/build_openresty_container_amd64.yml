@@ -14,4 +14,4 @@ jobs:
     with:
       image_name: 'vooplv/webcontainer'
       image_tag: 'openresty'
-      dockerfile_path: ${{ github.workspace }}/openresty-build
+      type: 'openresty'
