@@ -24,7 +24,7 @@ on:
 
 jobs:
   validate:
-    runs-on: ubuntu-latest
+    runs-on: ${{ vars.RUNNER }}
     steps:
       - name: Checkout code
         uses: actions/checkout@v4.2.2
@@ -51,8 +51,8 @@ jobs:
           echo "Image name: ${{ inputs.image_name }}"
           echo "Image tag: ${{ inputs.image_tag }}"
   build:
-    runs-on: ubuntu-latest
-    needs: validate
+    runs-on: ${{ vars.RUNNER }}
+    needs: ["validate"]
     permissions:
       contents: read
       packages: write
@@ -97,13 +97,13 @@ jobs:
           exit-code: 1
           vuln-type: 'os,library'
           output: 'trivy-results-${{ inputs.image_name }}-${{ inputs.type }}-${{ inputs.image_tag }}.txt'
-      - name: Upload Trivy Scan Results
-        uses: actions/upload-artifact@v4.6.2
-        if: always()
-        with:
-          name: trivy-results-${{ inputs.image_name }}-${{ inputs.type }}-${{ inputs.image_tag }}
-          path: trivy-results-${{ inputs.image_name }}-${{ inputs.type }}-${{ inputs.image_tag }}.txt
-          retention-days: 1
+      #- name: Upload Trivy Scan Results
+      #  uses: actions/upload-artifact@v4.6.2
+      #  if: always()
+      #  with:
+      #    name: trivy-results-${{ inputs.image_name }}-${{ inputs.type }}-${{ inputs.image_tag }}
+      #    path: trivy-results-${{ inputs.image_name }}-${{ inputs.type }}-${{ inputs.image_tag }}.txt
+      #    retention-days: 1
       - name: Add results to summary
         if: always()
         run: |
