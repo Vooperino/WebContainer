@@ -14,15 +14,20 @@ function get_arch() {
 
 function createCMD() {
     local script_name="$1"
+    local script_path="$2"
     if [ -z "$script_name" ]; then
         echo "[ERROR] No script name provided to createCMD function."
         exit 1
     fi
-    if [ ! -f "/scripts/$script_name.sh" ]; then
-        echo "[ERROR] Script /scripts/$script_name.sh does not exist."
+    if [ -z "$script_path" ]; then
+        echo "[ERROR] No script path provided to createCMD function."
         exit 1
     fi
-    cp -r -f -v "/scripts/$script_name.sh" "/usr/bin/$script_name"
+    if [ ! -f "$script_path/$script_name.sh" ]; then
+        echo "[ERROR] Script $script_path/$script_name.sh does not exist."
+        exit 1
+    fi
+    cp -r -f -v "$script_path/$script_name.sh" "/usr/bin/$script_name"
     chmod 555 "/usr/bin/$script_name"
     if [ $? -ne 0 ]; then
         echo "[ERROR] Failed to create command for $script_name."
@@ -56,14 +61,14 @@ curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin
 
 echo "[INFO] Creating new commands to use"
 
-createCMD "reloadCron"
-createCMD "renewAllLECert"
-createCMD "createLECert"
-createCMD "generateSupervisorConfig"
-createCMD "applypermissions"
-createCMD "lazyamount"
-createCMD "websrv"
-createCMD "reloadPHPfpm"
+createCMD "reloadCron" "/intcmd"
+createCMD "renewAllLECert" "/intcmd/letsencrypt"
+createCMD "createLECert" "/intcmd/letsencrypt"
+createCMD "generateSupervisorConfig" "/intcmd"
+createCMD "applypermissions" "/intcmd"
+createCMD "lazyamount" "/intcmd"
+createCMD "websrv" "/intcmd"
+createCMD "reloadPHPfpm" "/intcmd"
 
 rm -rf /intcmd
 
