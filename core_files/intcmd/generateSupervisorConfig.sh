@@ -125,9 +125,6 @@ fi
 
 addSpacer
 generatePHPConfig "7.4"
-generatePHPConfig "8.0"
-generatePHPConfig "8.1"
-generatePHPConfig "8.2"
 generatePHPConfig "8.3"
 
 if [[ -f "${ROOT_SUPERVISOR_PATH}/1_pack.conf" ]]; then
