@@ -1,4 +1,6 @@
-FROM vooplv/webcontainer:core-dev
+ARG BASE_IMAGE=ghcr.io/vooperino/webcontainer:core-dev
+FROM ${BASE_IMAGE}
+
 ENV DEBIAN_FRONTEND=noninteractive
 
 EXPOSE 80

@@ -16,6 +16,11 @@ on:
         description: 'Type of build (core, nginx, openresty)'
         required: true
         type: string
+      core_image:
+        description: 'Core image to use for nginx/openresty builds'
+        required: false
+        type: string
+        default: 'ghcr.io/vooperino/webcontainer:core-dev'
 
 jobs:
   validate:
@@ -59,13 +64,16 @@ jobs:
           cd .build
           chmod +x build-images.sh
           BSH_ARG=""
+
           if [ "${{ inputs.type }}" = "core" ]; then
             BSH_ARG="--core-only"
           fi
           if [ "${{ inputs.type }}" = "nginx" ]; then
+            export CI_BASECORE_OVERRIDE="${{ inputs.core_image }}"
             BSH_ARG="--nginx-only"
           fi
           if [ "${{ inputs.type }}" = "openresty" ]; then
+            export CI_BASECORE_OVERRIDE="${{ inputs.core_image }}"
             BSH_ARG="--openresty-only"
           fi
 
@@ -78,14 +86,40 @@ jobs:
           fi
 
           ./build-images.sh $BSH_ARG
-
+      - name: Run Trivy vulnerability scanner
+        uses: aquasecurity/trivy-action@master
+        with:
+          image-ref: '${{ inputs.image_name }}:${{ inputs.type }}-${{ inputs.image_tag }}'
+          format: 'table'
+          severity: 'CRITICAL,HIGH'
+          ignore-unfixed: true
+          exit-code: '1'
+          vuln-type: 'os,library'
+          output: 'trivy-results-${{ inputs.image_name }}-${{ inputs.type }}-${{ inputs.image_tag }}.txt'
+          scan-type: 'image'
+          fail-on: 'vuln'
+      - name: Upload Trivy Scan Results
+        uses: actions/upload-artifact@v3
+        if: always()
+        with:
+          name: trivy-results-${{ inputs.image_name }}-${{ inputs.type }}-${{ inputs.image_tag }}
+          path: trivy-results-${{ inputs.image_name }}-${{ inputs.type }}-${{ inputs.image_tag }}.txt
+          retention-days: 1
+      - name: Add results to summary
+        if: always()
+        run: |
+          echo "## Trivy Scan Results" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          cat trivy-results-${{ inputs.image_name }}-${{ inputs.type }}-${{ inputs.image_tag }}.txt >> $GITHUB_STEP_SUMMARY
       - name: Log in to Docker Hub
         uses: docker/login-action@v3.4.0
         with:
           username: ${{ secrets.DOCKER_HUB_USERNAME }}
           password: ${{ secrets.DOCKER_HUB_PASSWORD }}
       - name: Push Docker image to Docker Hub
-        run: docker push ${{ inputs.image_name }}:${{ inputs.type }}-${{ inputs.image_tag }}
+        run: |
+          docker tag ${{ inputs.image_name }}:${{ inputs.type }}-${{ inputs.image_tag }} vooplv/${{ inputs.image_name }}:${{ inputs.type }}-${{ inputs.image_tag }}
+          docker push vooplv/${{ inputs.image_name }}:${{ inputs.type }}-${{ inputs.image_tag }}
       - name: Log out from Docker Hub
         run: docker logout
       - name: Log in to GH Container Registry

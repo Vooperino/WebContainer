@@ -1,0 +1,38 @@
+name: Build_Containers
+run-name: Build Containers
+
+on:
+  workflow_dispatch: {}
+  #push:
+  #  branches:
+  #    - main
+
+jobs:
+  build_core_amd64:
+    name: Build Core Container
+    uses: ./.github/workflows/build_container_template.yml
+    secrets: inherit
+    with:
+      image_name: 'webcontainer'
+      image_tag: 'dev'
+      type: 'core'
+
+  build_nginx_amd64:
+    name: Build Nginx Container AMD64
+    needs: build_core_amd64
+    uses: ./.github/workflows/build_container_template.yml
+    secrets: inherit
+    with:
+      image_name: 'webcontainer'
+      image_tag: 'dev'
+      type: 'nginx'
+
+  build_openresty_amd64:
+    name: Build Openresty Container AMD64
+    needs: build_core_amd64
+    uses: ./.github/workflows/build_container_template.yml
+    secrets: inherit
+    with:
+      image_name: 'webcontainer'
+      image_tag: 'dev'
+      type: 'openresty'
