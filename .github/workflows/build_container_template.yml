@@ -23,7 +23,7 @@ on:
         description: 'Core image to use for nginx/openresty builds'
         required: false
         type: string
-        default: 'ghcr.io/vooperino/webcontainer:core-dev'
+        default: 'vooplv/webcontainer:core-dev'
 
 jobs:
   validate:
