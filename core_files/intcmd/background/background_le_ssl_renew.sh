@@ -4,6 +4,15 @@ LE_SSL_DIR="/web/ssl"
 CERT_WEBROOT="/web/cert_webroot"
 CLOUDFLARE_ACCOUNT_FILE="/cloudflare-account.ini"
 
+USER="www-data"
+GROUP="www-data"
+PERMISSIONS=755
+
+function applyPermissions() {
+    chown -R ${USER}:${GROUP} "$LE_SSL_DIR"
+    chmod -R ${PERMISSIONS} "$LE_SSL_DIR"
+}
+
 function validatePaths() {
     if [[ ! -d "$LE_SSL_DIR" ]]; then
         echo "[INFO] Creating Let's Encrypt SSL directory: $LE_SSL_DIR"
@@ -28,7 +37,8 @@ function renewCertificates() {
     echo "[INFO] Starting certificate renewal process..."
     local WEBROOT_OPTS="--webroot --webroot-path $CERT_WEBROOT"
     if [[ -f "$CLOUDFLARE_ACCOUNT_FILE" ]]; then
-        WEBROOT_OPTS+=" --dns-cloudflare --dns-cloudflare-credentials $CLOUDFLARE_ACCOUNT_FILE"
+        echo "[INFO] Cloudflare credentials file found, using DNS challenge."
+        WEBROOT_OPTS=" --dns-cloudflare --dns-cloudflare-credentials $CLOUDFLARE_ACCOUNT_FILE"
     fi
     certbot renew --config-dir ${LE_SSL_DIR} ${WEBROOT_OPTS}
     if [[ $? -ne 0 ]]; then
@@ -53,6 +63,7 @@ while true; do
     fi
     validatePaths
     renewCertificates
+    applyPermissions
     echo "[INFO] Waiting for 12 hours before the next renewal check..."
     sleep 43200
 done
