@@ -58,6 +58,7 @@ jobs:
     needs: ["validate"]
     permissions:
       contents: read
+      actions: read
       security-events: write
     steps:
       - name: Checkout code
@@ -98,7 +99,8 @@ jobs:
         with:
           scan-type: 'image'
           image-ref: '${{ inputs.image_name }}:${{ inputs.type }}-${{ inputs.image_tag }}'
-          format: 'sarif'
+          format: 'template'
+          template: '@/contrib/sarif.tpl'
           ignore-unfixed: true
           hide-progress: true
           exit-code: 0
