@@ -88,7 +88,7 @@ jobs:
             export CI_BASENAME_OVERRIDE=${{ inputs.image_name }}
           fi
 
-          if [ ! -z "${CCI_CORE_CONTAINER}" ]; then
+          if [ ! -z "${CI_CORE_CONTAINER}" ]; then
             echo "[INFO] Using core image override: ${CI_CORE_CONTAINER}"
           fi
 
