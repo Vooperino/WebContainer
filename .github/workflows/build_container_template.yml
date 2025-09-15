@@ -24,10 +24,6 @@ on:
         required: false
         type: string
         default: 'vooplv/webcontainer:core-dev'
-      trivy_version:
-        required: true
-        type: string
-        default: '0.33.1'
 
 jobs:
   validate:
