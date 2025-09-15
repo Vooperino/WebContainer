@@ -1,15 +1,21 @@
 name: Build_Containers_AMD64
-run-name: Build Containers AMD64
+run-name: Build Containers AMD64 (${{ github.ref_name }})
 
 on:
   workflow_dispatch: {}
   push:
     branches:
       - main
+    paths:
+      - 'core_files/**'
+      - 'install/**'
+      - 'nginx-build/**'
+      - 'openresty-build/**'
+      - 'Dockerfile'
 
 jobs:
   build_core_amd64:
-    name: Build Core Container AMD64
+    name: Build Core Container AMD64 (${{ github.ref_name }})
     uses: ./.github/workflows/build_container_template.yml
     secrets: inherit
     with:
@@ -19,7 +25,7 @@ jobs:
       runner: ${{ vars.RUNNER }}
 
   build_nginx_amd64:
-    name: Build Nginx Container AMD64
+    name: Build Nginx Container AMD64 (${{ github.ref_name }})
     needs: build_core_amd64
     uses: ./.github/workflows/build_container_template.yml
     secrets: inherit
@@ -31,7 +37,7 @@ jobs:
       core_image: 'vooplv/webcontainer:core-${{ github.ref_name }}'
 
   build_openresty_amd64:
-    name: Build Openresty Container AMD64
+    name: Build Openresty Container AMD64 (${{ github.ref_name }})
     needs: build_core_amd64
     uses: ./.github/workflows/build_container_template.yml
     secrets: inherit
