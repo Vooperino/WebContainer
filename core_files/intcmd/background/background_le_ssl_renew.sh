@@ -28,7 +28,8 @@ function renewCertificates() {
     echo "[INFO] Starting certificate renewal process..."
     local WEBROOT_OPTS="--webroot --webroot-path $CERT_WEBROOT"
     if [[ -f "$CLOUDFLARE_ACCOUNT_FILE" ]]; then
-        WEBROOT_OPTS+=" --dns-cloudflare --dns-cloudflare-credentials $CLOUDFLARE_ACCOUNT_FILE"
+        echo "[INFO] Cloudflare credentials file found, using DNS challenge."
+        WEBROOT_OPTS=" --dns-cloudflare --dns-cloudflare-credentials $CLOUDFLARE_ACCOUNT_FILE"
     fi
     certbot renew --config-dir ${LE_SSL_DIR} ${WEBROOT_OPTS}
     if [[ $? -ne 0 ]]; then
