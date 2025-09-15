@@ -13,6 +13,11 @@ on:
       - 'openresty-build/**'
       - 'Dockerfile'
 
+permissions:
+  contents: read
+  actions: read
+  security-events: write
+
 jobs:
   build_core_amd64:
     name: Build Core Container AMD64 (${{ github.ref_name }})

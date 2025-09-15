@@ -25,6 +25,11 @@ on:
         type: string
         default: 'vooplv/webcontainer:core-dev'
 
+permissions:
+  contents: read
+  actions: read
+  security-events: write
+
 jobs:
   validate:
     runs-on: ${{ inputs.runner }}
