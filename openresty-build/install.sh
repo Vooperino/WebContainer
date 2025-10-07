@@ -1,4 +1,7 @@
-LUA_VER="5.4.8"
+#!/usr/bin/env bash
+
+BASE_LUA="5.4"
+LUA_VER="${BASE_LUA}.8"
 LUAROCK_VER="3.12.2"
 CURRECT_DIR=$(pwd)
 
@@ -20,7 +23,7 @@ wget https://luarocks.org/releases/luarocks-${LUAROCK_VER}.tar.gz
 tar zxpf luarocks-${LUAROCK_VER}.tar.gz
 rm luarocks-${LUAROCK_VER}.tar.gz
 cd luarocks-${LUAROCK_VER}
-./configure --with-lua-include=/usr/local/include
+./configure --lua-version=${BASE_LUA} --with-lua-include=/usr/local/include
 make install
 cd ${CURRECT_DIR}
 
