@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-SUPERCRON_VERSION="0.2.34"
+SUPERCRON_VERSION="0.2.37"
 
 function get_arch() {
     local arch=$(uname -m)
