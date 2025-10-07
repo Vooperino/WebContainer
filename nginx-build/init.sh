@@ -106,6 +106,9 @@ if ! checkFile $AUTORUN_PATH; then
     echo "#!/usr/bin/env bash" >> $AUTORUN_PATH
 fi
 
+chmod +x $AUTORUN_PATH
+bash $AUTORUN_PATH
+
 chmod 755 -R /scripts/*
 chmod -R 777 /var/log
 chmod -R 777 /run/php
