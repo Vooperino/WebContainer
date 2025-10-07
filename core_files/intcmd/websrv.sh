@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+SCRIPT_VERSION="1.0.1"
+
 function print_usage() {
     echo "Usage: $0 [options]"
     echo "Options:"
@@ -18,6 +20,7 @@ fi
 SERVICE="webserver"
 SERVICE_STATUS=$(supervisorctl status "${SERVICE}" | awk '{print $2}')
 
+echo "Script version: ${SCRIPT_VERSION}"
 echo "Current status of ${SERVICE}: ${SERVICE_STATUS}"
 
 while [[ $# -gt 0 ]]; do
