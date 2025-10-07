@@ -3,10 +3,10 @@
 function print_usage() {
     echo "Usage: $0 [options]"
     echo "Options:"
-    echo "  --stop        Stop the web server"
-    echo "  --start       Start the web server"
-    echo "  --restart     Restart the web server"
-    echo "  -h, --help    Show this help message and exit"
+    echo "  --stop                  Stop the web server"
+    echo "  --start                 Start the web server"
+    echo "  --restart | --reload    Restart/Reload the web server"
+    echo "  -h, --help              Show this help message and exit"
 }
 
 if [[ $# -eq 0 ]]; then
@@ -57,7 +57,7 @@ while [[ $# -gt 0 ]]; do
                 exit 0
             fi
             ;;
-        --restart)
+        --restart|--reload)
             if [ "$SERVICE_STATUS" = "RUNNING" ]; then
                 echo "[INFO] Restarting web server..."
                 supervisorctl stop ${SERVICE}

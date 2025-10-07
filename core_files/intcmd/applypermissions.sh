@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 WWDATA_PERMISSION_CODE=0755
-WWWDATA_PATHS=("/run/php" /var/log/php*.*-fpm.log "/usr/local/openresty")
+WWWDATA_PATHS=("/run/php" "/web" "/usr/local/openresty")
 
 while true; do
     for path in "${WWWDATA_PATHS[@]}"; do
