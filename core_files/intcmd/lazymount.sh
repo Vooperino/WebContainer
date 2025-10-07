@@ -19,10 +19,10 @@ declare -A MOUNTS
 MOUNTS["/usr/local/openresty/nginx/conf"]="/config/openresty"
 MOUNTS["/etc/php"]="/config/php"
 
-if [ -d "/usr/local/share/lua/5.4" ]; then
-  echo "Mounting Custom Lua Directory"
-  MOUNTS["/usr/local/share/lua/5.4"]="/config/lua"
-fi
+#if [ -d "/usr/local/share/lua/5.4" ]; then
+#  echo "Mounting Custom Lua Directory"
+#  MOUNTS["/usr/local/share/lua/5.4"]="/config/lua"
+#fi
 
 for to_path in "${!MOUNTS[@]}"; do
   set -Eeuo pipefail
